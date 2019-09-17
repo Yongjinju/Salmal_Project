@@ -26,19 +26,18 @@
 	function selectChoice(){
 	$.ajax({
 		url : "selectChoice",
-		success: function (data) {
+		success: function (choice) {
 			
 			if($('#check').val() == 'ok'){//내글
-				data = data-1000000;
 				$('#proChoice').css({ "background-color" : "yellow", "border-radius" : "20%", "width": "70px", "text-align":"center" });
-				$('#proChoice').html("<h3>"+data+"</h3>");
+				$('#proChoice').html("<h3>"+choice.cnt+"</h3>");
 			}
 			
 			else{//내글아님
 				
-				if(data <1000000){//선택함
+				if(choice.c == 1){//선택함
 					$('#proChoice').css({ "background-color" : "yellow", "border-radius" : "20%", "width": "70px", "text-align":"center" });
-					$('#proChoice').html("<h3>"+data+"</h3>");
+					$('#proChoice').html("<h3>"+choice.cnt+"</h3>");
 					
 				}else{ //선택안함
 					$('#proChoice').html();
@@ -53,17 +52,16 @@
 
 	$.ajax({
 		url : "selectNChoice",
-		success: function (data) {
+		success: function (nchoice) {
 		
 			if($('#check').val() == 'ok'){//내글
-				data = data-1000000;
 				$('#conChoice').css({ "background-color" : "yellow", "border-radius" : "20%", "width": "70px", "text-align":"center" });
-				$('#conChoice').html("<h3>"+data+"</h3>");
+				$('#conChoice').html("<h3>"+nchoice.cnt+"</h3>");
 			}else{//내글아님
 			
-				if(data <1000000){
+				if(nchoice.c == 1){
 					$('#conChoice').css({ "background-color" : "yellow", "border-radius" : "20%", "width": "70px", "text-align":"center" });
-					$('#conChoice').html("<h3>"+data+"</h3>");
+					$('#conChoice').html("<h3>"+nchoice.cnt+"</h3>");
 					
 				}
 				else{
@@ -312,6 +310,9 @@
 <input id="check" type="hidden" value="${check}"/>
 <input id="pnum" type="hidden" value="${article.productNum}"/>
 <input id="replyType" type="hidden" value="1"/>
+<input value="${choice.CHOICE}">
+<input value="${choice.CNT}">
+
 	<script src="/resources/js/jquery.min.js"></script>
 	<script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
 	<script src="/resources/js/bootstrap.min.js"></script>

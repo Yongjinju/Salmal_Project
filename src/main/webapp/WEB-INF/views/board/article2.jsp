@@ -25,21 +25,15 @@
 function selectChoice(){
 	var i=0;
 	var j=0;
+	var c1=0;
+	var c2=0;
 	
 	$.ajax({
 		url : "selectChoice",
 		async : false,
-		success: function (data) {
-			
-			if(	$('#check').val() == 'ok'){//내글(선택X)
-				i = data-1000000;
-			}
-			else{//내글X
-				
-					i = data;
-				
-				
-			}
+		success: function (choice) {
+			c1 = choice.c;
+			i = choice.cnt;
 		},
 		data:{
 			productNum:$('#p1num').val()
@@ -49,25 +43,25 @@ function selectChoice(){
 	$.ajax({
 		url : "selectChoice",
 		async : false,
-		success: function (data) {
-			
-			if(	$('#check').val() == 'ok'){//내글(선택X)
-				j = data-1000000;
-			
-			}else{//내글X
-				
-					j=data;
-				
-			}
+		success: function (choice) {
+			c2 = choice.c;
+			j = choice.cnt;
 		},
 		data:{
 			productNum:$('#p2num').val()
 		}
 	})
 	
-	if(i>=1000000 || j>=1000000){
-		
-	}else{
+	
+	if(c1 == 0 && c2 == 0){//선택X
+		if($('#check').val() == 'ok'){//내글
+			$('#proChoice').css({ "background-color" : "yellow"  , "border-radius" :"30%", "width": "70px", "text-align":"center"});
+			$('#proChoice').html("<h2>"+i+"</h2>");
+			$('#conChoice').css({ "background-color" : "yellow"  , "border-radius" :"30%", "width": "70px", "text-align":"center"});
+			$('#conChoice').html("<h2>"+j+"</h2>");
+			
+		}
+	}else{//선택X, 내글X
 		if(i>j){
 			$('#proChoice').css({ "background-color" : "yellow"  , "border-radius" :"30%", "width": "70px", "text-align":"center"});
 			$('#proChoice').html("<h2>"+i+"</h2>");
@@ -84,7 +78,6 @@ function selectChoice(){
 			$('#conChoice').html("<h2>"+j+"</h2>");
 		}
 	}
-
 	
 }
 

@@ -63,31 +63,46 @@ public class ArticleController {
 
 	// 추천조회
 	@RequestMapping(value = "/selectChoice")
-	public @ResponseBody int selectChoice(HttpSession session, int productNum) {
+	public @ResponseBody Map<String, Integer> selectChoice(HttpSession session, int productNum) {
 
 		int logNum = Integer.parseInt(session.getAttribute("logNum").toString());
 
 		RatingVO vo = new RatingVO(productNum, logNum, 1);
-
+		Map<String,Integer> choice = new HashMap<String, Integer>();
+		//선택안했으면 0, 좋아요수
+		//선택했으면 1,좋아요수
+		
 		if (rdao.checkChoice(vo) == 0) {// 선택안했으면
-			return rdao.selectChoice(productNum)+1000000;
-		} else {
-			return rdao.selectChoice(productNum);
+			choice.put("c", 0);
+
+		} else {//선택 했으면
+			choice.put("c", 1);
 		}
+		choice.put("cnt", rdao.selectChoice(productNum));
+		System.out.println(choice);
+		return choice;
 	}
 
 	// 비추천조회
 	@RequestMapping(value = "/selectNChoice")
-	public @ResponseBody int selectNChoice(HttpSession session, int productNum) {
+	public @ResponseBody Map<String, Integer> selectNChoice(HttpSession session, int productNum) {
 
 		int logNum = Integer.parseInt(session.getAttribute("logNum").toString());
 
 		RatingVO vo = new RatingVO(productNum, logNum, 1);
+		Map<String,Integer> nchoice = new HashMap<String, Integer>();
+		//선택안했으면 0, 좋아요수
+		//선택했으면 1,좋아요수
+		
 		if (rdao.checkChoice(vo) == 0) {// 선택안했으면
-			return rdao.selectNChoice(productNum)+1000000;
-		}else {
-			return rdao.selectNChoice(productNum);
+			nchoice.put("c", 0);
+
+		} else {//선택 했으면
+			nchoice.put("c", 1);
 		}
+		nchoice.put("cnt", rdao.selectNChoice(productNum));
+		System.out.println(nchoice);
+		return nchoice;
 	}
 
 	@RequestMapping("/proInsert")
@@ -104,7 +119,7 @@ public class ArticleController {
 
 		return "success";
 	}
-
+	
 	@RequestMapping("/conInsert")
 	public @ResponseBody String conChoice(int productNum, HttpSession session) {
 		int logNum = Integer.parseInt(session.getAttribute("logNum").toString());
