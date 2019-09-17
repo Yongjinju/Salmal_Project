@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- mappers/rating.xml -->
+
+<mapper namespace="rating">
+ 
+ 	<!-- 살까말까여부 여부 -->
+	<select id="checkChoice" resultType="int">
+		select count(*)
+		from article a, product p, rating r
+		where a.articlenum = p.articlenum
+		and r.productnum = p.productnum
+		and r.membernum = #{memberNum}
+		and a.articlenum in (
+								select articlenum 
+								from product 
+								where productnum =  #{productNum}
+							)
+	</select>
+ 
+	<!-- 상품의 전체 살까조회 -->
+	<select id="selectChoice" resultType="int">
+		select count(*)
+		from product inner join rating
+		using(productNum)
+		where choice = 1
+		and productNum = #{productNum}
+	</select>
+
+	<!-- 상품의 전체 말까조회 -->
+	<select id="selectNChoice" resultType="int">
+		select count(*)
+		from product inner join rating
+		using(productNum)
+		where choice = 0
+		and productNum = #{productNum}
+	</select>
+
+	<!-- 살까 버튼 클릭-->
+	 <insert id="insertChoice">
+      insert into rating (productNum,memberNum,choice) 
+      values (#{productNum},#{memberNum},1)
+   	</insert>
+	
+	<!-- 말까 버튼 클릭-->
+	 <insert id="insertNChoice">
+      insert into rating (productNum,memberNum,choice) 
+      values (#{productNum},#{memberNum},0)
+   	</insert>
+
+</mapper>

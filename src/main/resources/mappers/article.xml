@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- mappers/article.xml -->
+
+<mapper namespace="article">
+
+   <select id="selectListAllbyDate" resultType="java.util.HashMap">
+   	  select * from
+      (select  article.articleNum, substr(articleTitle,1,15) articleTitle, nickName, articleDate, articleHits, replyCnt replyCnt, productCnt productCnt, categoryName
+      from article ,member, category, (select product.articlenum, count(replynum) replyCnt
+                                      from product, reply
+                                      where product.productnum=reply.productnum(+)
+                                      group by product.articlenum)   replyCount ,
+                                                                                  (select product.articleNum, count(*) productCnt
+                                                                                  from article, product
+                                                                                  where article.articleNum=product.articleNum
+                                                                                  group by product.articleNum)  productCount                      
+      where article.articleNum  = productCount.articleNum                                                                                                
+            and article.articleNum = replyCount.articleNum 
+            and article.memberNum=member.memberNum
+            and article.categorynum=category.categorynum
+      order by articleDate desc)
+      <![CDATA[ where ROWNUM <= 5 ]]>
+   </select>
+   <select id="selectListAllbyHits" resultType="java.util.HashMap">
+	select * from 
+	(select  article.articleNum, substr(articleTitle,1,15) articleTitle, nickName, articleDate, articleHits, replyCnt replyCnt, productCnt productCnt, categoryName
+      from article ,member, category, (select product.articlenum, count(replynum) replyCnt
+                                      from product, reply
+                                      where product.productnum=reply.productnum(+)
+                                      group by product.articlenum)   replyCount ,
+                                                                                  (select product.articleNum, count(*) productCnt
+                                                                                  from article, product
+                                                                                  where article.articleNum=product.articleNum
+                                                                                  group by product.articleNum)  productCount                      
+      where article.articleNum  = productCount.articleNum                                                                                                
+            and article.articleNum = replyCount.articleNum 
+            and article.memberNum=member.memberNum
+            and article.categorynum=category.categorynum
+      order by articleHits desc)
+      <![CDATA[ where ROWNUM <= 5 ]]>
+   </select>
+   
+   <select id="selectReply" resultType="ReplyVO">
+      select r.replyNum,
+      r.memberNum, r.productNum, r.replyDate, r.choice, r.replyContent,
+      m.nickname
+      from reply r, member m
+      where choice=#{choice} and
+      productNum=#{productNum} and r.memberNum=m.memberNum
+      order by
+      r.replyNum
+   </select>
+ 
+ 
+    <select id="selectListAll" resultType="java.util.HashMap">
+
+      select  article.articleNum, substr(articleTitle,1,15) articleTitle, nickName, articleDate, articleHits, replyCnt replyCnt, productCnt productCnt, categoryName
+      from article ,member, category, (select product.articlenum, count(replynum) replyCnt
+                                      from product, reply
+                                      where product.productnum=reply.productnum(+)
+                                      group by product.articlenum)   replyCount ,
+                                                                                  (select product.articleNum, count(*) productCnt
+                                                                                  from article, product
+                                                                                  where article.articleNum=product.articleNum
+                                                                                  group by product.articleNum)  productCount
+                                                                
+      where article.articleNum  = productCount.articleNum                                                                                                         
+            and article.articleNum = replyCount.articleNum 
+            and article.memberNum=member.memberNum
+            and article.categorynum=category.categorynum
+      
+
+      <if test="productCnt == 1 or productCnt == 2">
+
+         AND productCnt = #{productCnt}
+
+      </if>
+
+
+      <if test="articleTitle != null">
+
+         AND articleTitle like '%' || #{articleTitle} || '%'
+
+      </if>
+
+      <if test="!(categoryName == null or categoryName == '전체') ">
+
+         AND categoryName LIKE '%' || #{categoryName} || '%'
+
+      </if>
+
+      order by article.articleNum desc
+
+   </select>
+   
+     <select id="selectSearchArticle" resultType="int">
+
+      select count(*)
+      from article ,member, category, (select product.articlenum, count(replynum) replyCnt
+                                      from product, reply
+                                      where product.productnum=reply.productnum(+)
+                                      group by product.articlenum)   replyCount ,
+                                                                                  (select product.articleNum, count(*) productCnt
+                                                                                  from article, product
+                                                                                  where article.articleNum=product.articleNum
+                                                                                  group by product.articleNum)  productCount
+                                                                
+      where article.articleNum  = productCount.articleNum                                                                                                         
+            and article.articleNum = replyCount.articleNum 
+            and article.memberNum=member.memberNum
+            and article.categorynum=category.categorynum
+      
+
+      <if test="productCnt == 1 or productCnt == 2">
+
+         AND productCnt = #{productCnt}
+
+      </if>
+
+      <if test="articleTitle != null">
+
+         AND articleTitle like '%' || #{articleTitle} || '%'
+
+      </if>
+
+      <if test="!(categoryName == null or categoryName == '전체') ">
+
+         AND categoryName LIKE '%' || #{categoryName} || '%'
+
+      </if>
+
+
+   </select>
+ 
+    
+
+   <update id="updReply">
+      update reply set replyContent=#{replyContent}
+      where replyNum=#{replyNum}
+   </update>
+
+   <delete id="delReply">
+      delete from reply
+      where replyNum=#{replyNum}
+   </delete>
+   
+   <insert id="addReply">
+		insert into reply(replyNum, memberNum, productNum, replyContent, replyDate, choice)
+		values (reply_seq.nextval, #{memberNum}, #{productNum}, #{replyContent}, sysdate, #{choice})
+	</insert>
+	
+	<select id="totalReply" resultType="int">
+		select count(*)
+		from reply
+		where choice=#{choice} and productNum=#{productNum}
+	</select>
+
+
+   
+   
+ 	<update id="articleHitsUp">
+ 		
+ 		update article set articleHits = articleHits+1 
+ 		where articleNum=#{articleNum}
+ 	
+ 	
+ 	</update>
+   
+
+<insert id="insertProduct">
+insert into product (productNum, articleNum, productName, productLink, productImage)
+values (product_seq.nextval, (SELECT LAST_NUMBER 
+							FROM USER_SEQUENCES 
+							WHERE SEQUENCE_NAME = 'ARTICLE_SEQ')-1, 
+		#{productName}, #{productLink}, #{productImage})
+</insert>
+
+<insert id="insertArticle">
+insert into article (articleNum, memberNum, categoryNum, articleTitle, articleContent, articleHits, articleDate)
+values (article_seq.nextval, #{memberNum}, (select categoryNum 
+								from category 
+								where categoryName = #{categoryName}), 
+		#{articleTitle}, #{articleContent}, 0, sysdate)
+</insert>
+
+<select id="selectArticle" resultType="ArticleForSelectVO">
+select membernum, articlenum, articleTitle, categoryname, articleHits, p.productname, p.productnum, productlink, productImage, nickName, gender, birth, articleDate, articlecontent
+from article a inner join member m
+      using(membernum)
+   inner join category c
+      using(categorynum)
+   inner join product p
+      using(articlenum)
+where articlenum = #{articlenum}
+</select>
+
+<select id="selectArticleForUpdate" resultType="ArticleForSelectVO">
+select articleNum, articleTitle, articleTitle, productname, productnum, productlink, categoryname, articleContent, productImage
+from category inner join article
+	using(categorynum)
+	inner join product
+	using(articlenum)
+where articlenum = #{articlenum}
+</select>
+
+<delete id="deleteArticle">
+delete from article
+where articlenum = #{articlenum}
+</delete>
+
+<update id="updateArticle">
+update article 
+set categoryNum = (select categoryNum 
+					from category 
+					where categoryName = #{categoryName}), 
+	articleTitle = #{articleTitle}, 
+	articleContent = #{articleContent},
+	articleDate = sysdate
+where articleNum = #{articleNum}
+</update>
+
+<update id="updateOnlyArticleContent">
+update article
+set articleContent = #{articleContent}
+where articleNum = #{articleNum}
+</update>
+
+<update id="updateProduct">
+update product
+set 
+productNum = product_seq.nextval,
+	productName = #{productName},
+	productLink = #{productLink}
+<if test="productImage != null">
+	,productImage = #{productImage}
+</if>
+where productnum = #{oldProductNum}
+</update>
+
+<select id="selectCategoryName" resultType="String">
+select categoryName
+from category
+</select>
+
+<select id="selectRatingCount" resultType="int">
+select count(choice) choice
+from article inner join product
+	using(articlenum)
+	inner join rating
+	using(productnum)
+where articlenum = #{articlenum}
+</select>
+
+<select id="selectReplyCount" resultType="int">
+select count(replynum) replynum
+from article inner join product
+	using(articlenum)
+	inner join reply
+	using(productnum)
+where articlenum = #{articlenum}
+</select>
+
+
+<select id="selectArticle2" resultType="java.util.HashMap"> <!-- 골라줘 페이지 게시글 조회문, YJ -->
+		select member.membernum, 
+		article.articleNum, articleTitle, nickName, articleDate, articleHits, productCnt productCnt, 
+		gender,birth,categoryName, productNum, productName, 
+		productLink, 
+		productImage, articleContent
+		from article ,member, category,product,
+									(select product.articleNum, count(*) productCnt
+                                      from article, product
+                                      where article.articleNum=product.articleNum
+                                      group by product.articleNum)  productCount
+		where article.articleNum  = productCount.articleNum
+			and article.articleNum = product.articleNum                                                                                           
+		      and article.memberNum=member.memberNum
+		      and article.categorynum=category.categorynum
+		      and article.articleNum = #{articlenum}
+</select>
+
+</mapper>
