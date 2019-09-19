@@ -191,7 +191,9 @@ CREATE TABLE REPLY (
 	productNum NUMBER NOT NULL, /* 상품번호 */
 	replyContent VARCHAR2(1000) NOT NULL, /* 내용 */
 	replyDate DATE NOT NULL, /* 시간 */
-	choice NUMBER NOT NULL /* 살까 */
+	choice NUMBER NOT NULL, /* 살까 */
+	parentNum NUMBER, /* 부모댓글번호 */
+	depth NUMBER DEFAULT 0 NOT NULL /* 깊이 */
 );
 
 ALTER TABLE REPLY

@@ -26,10 +26,6 @@ public interface ArticleDAO {
 	public List<Map<String, Object>> selectListAllbyHits();
 	public List<Map<String, Object>> selectListAllbyDate();
 	public void articleHitsUp(int articleNum);
-	public List<ReplyVO> selectReply(ReplyVO vo);
-	public void addReply(ReplyVO vo);
-	public void delReply(int delNum);
-	public void updReply(ReplyVO vo);
 	
 	public int selectSearchArticle(Criteria cri);
 	public List<Map<String, Object>> selectArticle2(int articleNum);//골라줘 페이지 상품 조회문, YJ

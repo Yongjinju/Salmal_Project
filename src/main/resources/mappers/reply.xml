@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- mappers/reply.xml -->
+<mapper namespace="reply">
+   <select id="selectReply" resultType="ReplyVO">
+      select r.replyNum, r.memberNum, r.productNum, r.replyDate, r.choice, r.replyContent, m.nickname
+      from reply r, member m
+      where choice=#{choice} and productNum=#{productNum} and r.memberNum=m.memberNum
+      order by r.replyNum
+   </select>
+ 
+   <update id="updReply">
+      update reply set replyContent=#{replyContent}
+      where replyNum=#{replyNum}
+   </update>
+
+   <delete id="delReply">
+      delete from reply
+      where replyNum=#{replyNum}
+   </delete>
+   
+   <insert id="addReply">
+		insert into reply(replyNum, memberNum, productNum, replyContent, replyDate, choice, parentNum, depth)
+		values (reply_seq.nextval, #{memberNum}, #{productNum}, #{replyContent}, sysdate, #{choice}, #{parentNum}, #{depth})
+	</insert>
+	
+	<select id="totalReply" resultType="int">
+		select count(*)
+		from reply
+		where choice=#{choice} and productNum=#{productNum}
+	</select>
+</mapper>
