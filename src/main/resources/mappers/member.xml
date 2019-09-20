@@ -37,8 +37,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select memberNum from member where email = #{email}
 	</select>
 	
+	<select id="selectNickname" resultType="String">
+		select nickname from member where email = #{email}
+	</select>
+	
 	<select id="selectMemberInfo" resultType="MemberVO">
 		select * from member where memberNum = #{memberNum}
+	</select>
+	
+	<!-- 내가 작성한 글 조회 -->
+	<select id="selectMyArticle" resultType="java.util.HashMap">
+		select articlenum, nickname, articletitle, articledate, (select count(productNum)
+		                                                        from product
+		                                                        where articlenum = a.articlenum ) productcnt
+		from article a , member m 
+		where a.membernum = m.membernum and nickname=#{nickname}
 	</select>
 
 </mapper>

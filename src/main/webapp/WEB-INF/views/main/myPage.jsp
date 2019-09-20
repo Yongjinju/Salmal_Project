@@ -22,11 +22,24 @@
         <script src="https://kit.fontawesome.com/2fabbfb053.js"></script>
         <script>
         
+        var actionForm = $("#actionForm");
+        
         $(function(){
             $("#withdraw").click(function(){
                 alert('이용해 주셔서 감사합니다.');
             });
+            
+            $(".move").on("click",function(e){
+            	e.preventDefault();
+            	actionForm.append("<input type='hidden' name='articleNum' value'"
+            						+ $(this).attr("href") + "'>");
+            	actionForm.attr("action","article");
+            	actionForm.submit();
+            });
+            
         });
+        
+        
 
         </script>
         <link rel="stylesheet" href="./css/main.css">
@@ -82,7 +95,7 @@
                                 <!-- <button class="btn btn-success" type="button">내 정보 수정</button> -->
                         </div>
                     </div>
-                    <!-- <div id="card-990375">
+                    <div id="card-990375">
                         <div class="card">
                             <div class="card-header">
                                 <a class="card-link collapsed" data-toggle="collapse" data-parent="#card-990375" href="#card-element-791163">내가 쓴 게시물 조회</a>
@@ -93,27 +106,33 @@
                                         <thead>
                                             <tr>
                                                 <th>글번호</th>
-                                                <th>유형</th>
-                                                <th>작성자</th>
+                                                <th>말머리</th>
+                                                <th>닉네임</th>
                                                 <th>글제목</th>
                                                 <th>작성시간</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>359</td>
-                                                <td>#살까말까</td>
-                                                <td>홍길동</td>
-                                                <td>이것 좀 봐주실분?</td>
-                                                <td>2019-08-31</td>
-                                            </tr>
-                                            <tr>
-                                                <td>380</td>
-                                                <td>#골라줘</td>
-                                                <td>길라임</td>
-                                                <td>선택장애가 왔어요 도와주세요.</td>
-                                                <td>2019-08-31</td>
-                                            </tr>
+                                        	<c:forEach items="${myArticleList }" var="myArticle">
+	                                            <tr>
+	                                                <td>${myArticle.ARTICLENUM }</td>
+	                                                <td>${myArticle.PRODUCTCNT}</td>
+	                                                <c:if test="${myArticle.PRODUCTCNT eq '#이거어때?' }">
+														<td class="text-center ">
+															<a href="article?articleNum=<c:out value="${myArticle.ARTICLENUM}"></c:out>">
+																<c:out value="${myArticle.ARTICLETITLE }..."></c:out>
+															</a>
+ 														</td>
+													</c:if>
+													<c:if test="${myArticle.PRODUCTCNT eq '#골라줘' }">
+														<td class="text-center "><a href="article2?articleNum=<c:out value="${myArticle.ARTICLENUM}"></c:out>">
+															<c:out value="${myArticle.ARTICLETITLE }..."></c:out></a>
+														</td>
+													</c:if>
+	                                                <td>${myArticle.NICKNAME }</td>
+	                                                <td><fmt:formatDate value="${myArticle.ARTICLEDATE }" pattern="yyyy-MM-dd HH:mm"/></td>
+	                                             </tr>
+                                        	</c:forEach>
                                         </tbody>
                                     </table>
                                 </div>
@@ -192,7 +211,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> -->
+                        </div> 
 <!-- 			            <a id="modal-679956" href="#modal-container-679956" role="button" class="btn btn-danger" data-toggle="modal">회원 탈퇴하기</a> -->
 			            <br><button class="btn btn-primary float-right" onclick="history.back()">뒤로가기</button>
 			
@@ -222,6 +241,9 @@
                             </div>
                         </div>
                     </div>
+                    <form id="actionForm" action="/board/list" method="get">
+                    
+                    </form>
                 </div>
             </div>
         </div> 

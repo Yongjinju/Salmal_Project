@@ -1,5 +1,7 @@
 package kr.co.salmal.persistence;
 
+import java.util.List;
+import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -40,10 +42,22 @@ public class MemberDAOImpl implements MemberDAO{
 	public String selectlogNum(String email) {
 		return sqlSession.selectOne("member.selectlogNum",email);
 	}
+	
+	@Override
+	public String selectNickname(String email) {
+		return sqlSession.selectOne("member.selectNickname",email);
+	}
 
 	@Override
 	public MemberVO selectMemberInfo(int memberNum) {
 		return sqlSession.selectOne("member.selectMemberInfo", memberNum);
 	}
+
+	//내가 쓴 글 조회
+	@Override
+	public List<Map<String, Object>> selectMyArticlelist(String nickname) {
+		return sqlSession.selectList("member.selectMyArticle", nickname);
+	}
+
 
 }

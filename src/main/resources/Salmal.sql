@@ -229,5 +229,4 @@ create sequence reply_seq
        nocycle
        nocache;			
        
-     
        

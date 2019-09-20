@@ -106,6 +106,7 @@ public class MainController {
 			// 2. 아이디 비밀번호 일치, 사용자 아이디
 			session.setAttribute("login", "success");
 			session.setAttribute("logNum", mdao.selectlogNum(email));
+			session.setAttribute("nickname", mdao.selectNickname(email));
 		}
 		return "redirect:main";
 	}
@@ -115,6 +116,26 @@ public class MainController {
 	public String myPage(Model m, HttpSession session) {
 		int logNum = Integer.parseInt(session.getAttribute("logNum").toString());
 		m.addAttribute("member", mdao.selectMemberInfo(logNum));
+		String nickname = (String) session.getAttribute("nickname");
+		
+		System.out.println("lognum = "+logNum);
+		System.out.println("nickname = "+nickname);
+		
+		
+		List<Map<String, Object>> myArticleList =  mdao.selectMyArticlelist(nickname); //?
+		System.out.println("마이페이지 article리스트>>"+ myArticleList);
+		
+		for (Map<String, Object> map : myArticleList) { 
+			String name = map.get("PRODUCTCNT").toString();
+			
+			if (name.equals("1")) {
+				map.put("PRODUCTCNT", "#이거어때?");
+				} else {
+					map.put("PRODUCTCNT", "#골라줘");
+					}
+			}
+		
+		m.addAttribute("myArticleList", myArticleList);
 		return "main/myPage";
 	}
 	
