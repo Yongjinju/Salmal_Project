@@ -79,6 +79,8 @@
                                         <th>성별</th>
                                         <th>생년월일</th>
                                         <th>가입일자</th>
+                                        <th>활동점수</th>
+                                        
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -97,6 +99,7 @@
                                         	<fmt:formatDate value="${member.birth }" pattern="yyyy년 MM월 dd일"/>
                                         </td>
                                         <td><fmt:formatDate value="${member.joinDate }" pattern="yyyy년 MM월 dd일"/></td>
+                                        <td>${myPoint}</td>
                                     </tr>
                                 </tbody>
                             </table>
