@@ -54,4 +54,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where a.membernum = m.membernum and nickname=#{nickname}
 	</select>
 
+
+<!-- 내 등급 조회  -->
+	<select id = "selectPoint" resultType="int">
+		select (select count(*) from article where memberNum =  #{memberNum}) 
+				+ (select count(*) from reply where memberNum =  #{memberNum}) 
+				+ (select count(*) from rating where membernum =  #{memberNum}) 
+				+ (select count(*)
+					from article a, (select articlenum, productnum, choice 
+									from rating outer join product 
+									using(productnum)) p
+				where a.articlenum = p.articlenum
+				and a.membernum =  #{memberNum})
+		from dual
+	</select>
+	
 </mapper>

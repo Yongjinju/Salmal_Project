@@ -50,7 +50,17 @@
 
         <div class="container">
             <br><br><br>
-            <h2>${member.nickname }님의 마이페이지</h2>
+         <h2>
+           <c:if test="${myPoint le 10}">
+  				<img src="/resources/image/level1.png" height="50" width="50" align="top">
+  			</c:if>
+		   <c:if test="${myPoint gt 10 && myPoint le 20}">
+  				<img src="/resources/image/level2.png" height="50" width="50" align="top">
+           </c:if>
+           <c:if test="${myPoint gt 20 && myPoint le 30}">
+  				<img src="/resources/image/level3.png" height="50" width="50" align="top">
+           </c:if>
+             ${member.nickname }님의 마이페이지</h2>
             <%-- <br><p class="text-center">자신의 정보를 수정하고 자신이 평가한 게시물과 댓글을 입력한 게시물을 확인할 수 있습니다.</p>  --%>
             <br><p class="text-center">자신의 정보를 확인할 수 있습니다.</p>
             <hr>
