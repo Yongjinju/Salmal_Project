@@ -139,10 +139,34 @@ public class MainController {
 		return "main/myPage";
 	}
 	
-	// 관리자 페이지 이동
-	@RequestMapping("/admin")
-	public String admin() {
-		return "main/admin";
+//	// 관리자 페이지 이동
+//	@RequestMapping("/admin")
+//	public String admin() {
+//		return "main/admin";
+//	}
+	
+	// 회원정보수정 페이지 이동
+	@GetMapping("/updateForm")
+	public String admin(HttpSession session , Model m) {
+		int lognum = Integer.parseInt(session.getAttribute("logNum").toString());
+		System.out.println("lognum : "+ lognum);
+		MemberVO vo =  mdao.selectMemberInfo(lognum);
+		System.out.println("멤버 VO정보 : "+vo);
+		m.addAttribute("member", vo);
+		return "main/updateMember";
+	}
+	
+	//회원정보 수정 작업
+	@PostMapping("/update")
+	public String update(HttpSession session, MemberVO vo) {
+		System.out.println("MemberVO : "+ vo);
+		if(mdao.update(vo) == 1) {
+			session.invalidate();
+			return "redirect:/Salmal/main";
+		} else {
+			return "/mypage";
+		}
+		
 	}
 
 	// 로그아웃

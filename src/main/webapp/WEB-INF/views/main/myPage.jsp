@@ -92,7 +92,7 @@
                             </table>
                         </div>
                         <div class="card-footer">
-                                <!-- <button class="btn btn-success" type="button">내 정보 수정</button> -->
+                        	<button class="btn btn-success" type="button" onclick="location.href='updateForm'">내 정보 수정</button>
                         </div>
                     </div>
                     <div id="card-990375">

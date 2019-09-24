@@ -26,11 +26,11 @@ public class MemberDAOImpl implements MemberDAO{
 		 sqlSession.insert("member.insert",member);
 	}
 
-//	@Override
-//	public void update(MemberVO member) {
-//		 sqlSession.update("member.update",member);
-//
-//	}
+	@Override
+	public int update(MemberVO vo) {
+		 return sqlSession.update("member.update",vo);
+
+	}
 
 	@Override
 	public void delete(String email) {

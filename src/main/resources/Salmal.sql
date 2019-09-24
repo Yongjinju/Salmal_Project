@@ -228,5 +228,3 @@ create sequence reply_seq
        increment by 1
        nocycle
        nocache;			
-       
-       

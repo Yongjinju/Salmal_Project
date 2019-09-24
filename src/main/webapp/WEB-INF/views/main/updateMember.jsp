@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -27,65 +29,45 @@
         <div class="container">
             <br>
             <h2 class="text-center">회원 정보 수정</h2>
-            <p class="text-center">회원 정보를 수정할 수 있습니다.</p>
+            <p class="text-center">비밀번호 혹은 다른사람에게 보여지는 닉네임을 수정할 수 있습니다.</p>
             <hr>
 
             <div class="row row justify-content-center">
                 <div class="col-md-8">
-                    <form class="form-horizontal">
-                            <fieldset>
+                    <form class="form-horizontal" method="POST" action="/Salmal/update">
+					<input type="hidden" name="memberNum" value="${member.memberNum }">
+					<fieldset>
                             
                             <!-- Form Name -->
                             <legend>회원 정보 입력</legend>
                                <!-- 이메일, 닉네임, 비밀번호, 성별, 생년월일-->
                             <!-- Text input-->
                             <div class="form-group">
-                              <label class="control-label" for="email">이메일</label>  
-                              <input id="email" name="email" type="email" placeholder="salmal@mail.com" class="form-control input-md" value="gildong@mail.com" disabled>
-                            </div>
-                            <!-- Text input-->
-                            <div class="form-group">
                                 <label class="control-label" for="pass1">새로운 비밀번호</label>  
-                                <input id="pass1" name="pass1" type="password" placeholder="8~16자의 영문/숫자 조합?" class="form-control input-md" required>
+                                <input id="pass1" name="password" type="password" placeholder="8~16자의 영문/숫자 조합?" class="form-control input-md">
                             </div>
                             <!-- Text input-->
                             <div class="form-group">
                               <label class="control-label" for="pass2">비밀번호 확인</label>  
                               
-                              <input id="pass2" name="pass2" type="password" placeholder="" class="form-control input-md" required>
+                              <input id="pass2" name="pass2" type="password" placeholder="" class="form-control input-md">
                             </div>
                             
                             <!-- Text input-->
                             <div clas="form-group">
                               <label class="control-label" for="nick">새 닉네임</label>  
-                              <input id="nick" name="nick" type="text" placeholder="닉네임을 입력하세요." class="form-control input-md" required>
+                              <input id="nick" name="nickname" type="text" placeholder="닉네임을 입력하세요." class="form-control input-md">
                               <br>
                             </div>
                             
-                            <!-- Select Basic -->
-                            <div class="form-group">
-                                <label class="control-label" for="state">성별</label>
-                                <select id="state" name="state" class="form-control" disabled>
-                                    <option value="1">--선택--</option>
-                                    <option value="2" selected>남</option>
-                                  <option value="3">여</option>
-                                </select>
-                            </div>
                             
-                            <div clas="form-group">
-                              <label class="control-label" for="birth">생년월일</label>  
-                              <input id="birth" name="birth" type="date" placeholder="닉네임을 입력하세요." class="form-control input-md" value="1900-01-01" disabled>
-                              <br>
-                            </div>
-                            
-
                             <div class="form-group">
-                                <button class="btn btn-primary float-right">
+                                <button type="submit" class="btn btn-primary float-right">
                                     <i class="far fa-paper-plane"> 정보수정</i>
                                 </button>
 
                                 <label class="checkbox-inline" for="submit">
-                                  <input class="btn btn-success" type="reset" name="submit" id="submit" value="리셋">
+                                  <input class="btn btn-success" type="reset" name="submit" id="submit" onclick="history.back()" value="뒤로">
                                 </label>
                             </div>
                         </fieldset>

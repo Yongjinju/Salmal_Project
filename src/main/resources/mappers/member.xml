@@ -21,11 +21,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		#{gender},#{birth}, sysdate)
 
 	</insert>
-
-	<!--수정 -->
-<!-- 	<update id="update"> -->
-
-<!-- 	</update> -->
+	
+	<!--회원 정보 수정 -->
+	<update id="update">
+	<!-- nickname,password만 수정 가능, 동적SQL로도 표현하고 싶다. -->
+		update member
+		<trim prefix="set" suffixOverrides=",">
+			<if test="nickname != ''.toString()">
+			   nickname=#{nickname},
+			</if>		
+			<if test="password != ''.toString()" >		  
+			    password=#{password}		
+			</if>
+		</trim>
+		where memberNum = #{memberNum}
+	</update>
 
 	<!--삭제 -->
 	<delete id="delete">
@@ -45,13 +55,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select * from member where memberNum = #{memberNum}
 	</select>
 	
-	<!-- 내가 작성한 글 조회 -->
+	<!-- 내가 작성한 게시물 조회 -->
 	<select id="selectMyArticle" resultType="java.util.HashMap">
 		select articlenum, nickname, articletitle, articledate, (select count(productNum)
 		                                                        from product
 		                                                        where articlenum = a.articlenum ) productcnt
 		from article a , member m 
 		where a.membernum = m.membernum and nickname=#{nickname}
+	</select>
+	
+	<!-- 내가 댓글을 등록한 게시물 조회 -->
+	<select id="selectArticleWithMyReply">
+		select articlenum, nickname, articletitle, articledate, (select count(productNum)
+		                                                        from product
+		                                                        where articlenum = a.articlenum ) productcnt
+		from article a , member m 
+		where a.membernum = m.membernum and nickname=#{nickname}??                                                        
 	</select>
 
 </mapper>

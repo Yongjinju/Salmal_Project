@@ -8,7 +8,7 @@ public interface MemberDAO {
 	
 	public String selectLogin(String email);
 	public void insert(MemberVO member);
-//	public void update(MemberVO member);
+	public int update(MemberVO vo);
 	public void delete(String email);
 	public String selectlogNum(String email);
 	public String selectNickname(String email);
