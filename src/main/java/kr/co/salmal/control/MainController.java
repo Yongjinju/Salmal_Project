@@ -136,6 +136,7 @@ public class MainController {
 			}
 		
 		m.addAttribute("myArticleList", myArticleList);
+		m.addAttribute("myPoint",  mdao.selectPoint(logNum));		
 		return "main/myPage";
 	}
 	

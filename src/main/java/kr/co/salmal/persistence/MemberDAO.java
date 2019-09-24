@@ -16,4 +16,5 @@ public interface MemberDAO {
 	
 	public List<Map<String, Object>> selectMyArticlelist(String nickname);//내가 쓴 글 조회
 	
+	public int selectPoint(int memberNum); //등급조회
 }

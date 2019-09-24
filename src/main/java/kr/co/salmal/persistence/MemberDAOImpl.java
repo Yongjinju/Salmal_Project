@@ -59,5 +59,12 @@ public class MemberDAOImpl implements MemberDAO{
 		return sqlSession.selectList("member.selectMyArticle", nickname);
 	}
 
+	//등급조회
+	@Override
+	public int selectPoint(int memberNum) {
+		return sqlSession.selectOne("member.selectPoint", memberNum);
+
+	}
+
 
 }
