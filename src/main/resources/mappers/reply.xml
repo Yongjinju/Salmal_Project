@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!-- mappers/reply.xml -->
 <mapper namespace="reply">
    <select id="selectReply" resultType="ReplyVO">
-      select r.replyNum, r.memberNum, r.productNum, r.replyDate, r.choice, r.replyContent, m.nickname
+      select r.replyNum, r.memberNum, r.productNum, r.replyDate, r.choice, r.replyContent, m.nickname, r.depth, r.parentNum
       from reply r, member m
       where choice=#{choice} and productNum=#{productNum} and r.memberNum=m.memberNum
       order by r.replyNum
