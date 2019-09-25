@@ -11,6 +11,7 @@
 <script>
 	$(function() {
 		replyList();
+		reCommentList();
 		$('#button1').click(function() { //댓글 추가
 			if ($('#inputProReply').val() == "") {
 				alert('댓글을 입력하세요!');
@@ -24,6 +25,7 @@
 					},
 					success : function(data) {
 						replyList();
+						reCommentList();
 						$('#inputProReply').val("");
 					}
 				});
@@ -53,7 +55,8 @@
 											.val()
 								},
 								success : function() {
-									replyList()
+									replyList();
+									reCommentList();
 								}
 							});
 						}
@@ -70,52 +73,135 @@
 					},
 					success : function() {
 						replyList();
+						reCommentList();
 						alert('삭제완료');
 					}
 				})
 			}
 		});
+		
+		//대댓글 달기 클릭
+		$('#div1').on('click', '.reCommentAdd', function(){
+			var trId=$(this).attr('value');//부모댓글id
+			var parentDepth=$(this).attr('depth');//부모댓글깊이
+			console.log(trId);
+			console.log(parentDepth);
+			$('.parentNum').val(trId);//hidden에 부모댓글id저장
+			$('.reComment').val(""); //textarea초기화
+			$('#'+trId).next().after($('#reComment'));//textarea위치수정
+			$('#reComment').css('display',''); //댓글창디스플레이on
+		});
+		
+		//대댓글 등록
+		$('#div1').on('click', '.reCommentCommit', function(){
+			console.log('대댓등록');
+			if($('.reComment').val()==""){ //대댓글 추가창이 비어있다면
+				alert('댓글을 입력하세요!');
+			} else { 
+				$.ajax({
+					url:"addReply",
+					data:{
+						choice:1,
+						replyContent : $('.reComment').val(),
+						productNum:$('#productNum').val(),
+						parentNum:$('.parentNum').val(),
+					},
+					success:function(data){
+						replyList();
+						reCommentList();
+						$('.reComment').val("");
+						$('#reCommentTable').append($('#reComment'));
+						console.log(data)
+					}
+				});
+			}
+		});
+		
+		//대댓글 취소
+		$('#div1').on('click', '.reCommentCancle', function(){
+			console.log('대댓취소');
+			$('.reComment').val("");
+			$('#reCommentTable').append($('#reComment'));
+		});
+		
 	});
 
 	function replyList() {//댓글 전체 조회
 		$.ajax({
-					url : "replyList",
-					success : function(data) {
-						var html = "<table class='table text-center table-hover'>";
-						html += "<thead><tr><th>번호</th><th>내용</th><th>글쓴이</th></tr></thead><tbody>";
-						for (var i = 0; i < data.length; i++) {
-							html += '<tr id="'+data[i].replyNum+'" style="border-top:1px solid;">'
-							html += '<td style="width:100px;">' + (i + 1)
-									+ '</td>';
-							html += '<td style="word-break:break-all">'
-									+ data[i].replyContent + '</td>';
-							html += '<td style="width:200px;">'
-									+ data[i].nickname + '</td>';
-							html += '</tr>';
-							html += '<tr style="border-top:hidden;">';
-							html += '<td></td><td style="text-align:right;">'
-									+ data[i].replyDate + '</td>';
-							if ($('#logNum').val() == data[i].memberNum) {
-								html += '<td><button type="button" class="btn btn-success btn-sm updReply" value="'+data[i].replyNum+'" >수정</button>';
-								html += '<button type="button" class="btn btn-danger btn-sm delReply" value="'+data[i].replyNum+'">삭제</button> </td>';
-							}
-
-							html += '</tr>';
-
+			url : "replyList",
+			success : function(data) {
+				var html = "<table class='table text-center table-hover'>";
+				html += "<thead><tr><th>번호</th><th>내용</th><th>글쓴이</th></tr></thead>";
+				var cnt = 0;
+				for (var i = 0; i < data.length; i++) {
+					if(data[i].depth==0 && data[i].parentNum==0){
+						html += '<tbody id="td'+data[i].replyNum+'"><tr id="'+data[i].replyNum+'" style="border-top:1px solid;">'
+						html += '<td style="width:100px;">' + (cnt + 1)+ '</td>';
+						html += '<td style="word-break:break-all">'+ data[i].replyContent + '</td>';
+						html += '<td style="width:200px;">'+ data[i].nickname + '</td>';
+						html += '</tr>';
+						html += '<tr style="border-top:hidden;">';
+						html += '<td><a class="reCommentAdd" href="javascript:;" value="'+data[i].replyNum+'" depth="'+data[i].depth+'">답글달기</a></td>';
+						html += '<td style="text-align:right;">'+ data[i].replyDate + '</td>';
+						if ($('#logNum').val() == data[i].memberNum) {
+							html += '<td><button type="button" class="btn btn-success btn-sm updReply" value="'+data[i].replyNum+'" >수정</button>';
+							html += '<button type="button" class="btn btn-danger btn-sm delReply" value="'+data[i].replyNum+'">삭제</button> </td>';
+						} else {
+							html += '<td></td>'
 						}
-						html += '</tbody></table>';
-						$('#div1').html(html);
-						$('#button1').attr('disabled', false);
-						$('#button2').attr('disabled', false);
-					},
-					dataType : 'json',
-					data : {
-						productNum : $('#productNum').val(),
-						choice : 1,
-						articleNum : $('#articleNum').val(),
-						replyType : $('#replyType').val()
 					}
-				});
+					html += '</tr></tbody>';
+					cnt += 1;
+				}
+				html += '</table>';
+				$('#div1').html(html);
+				$('#button1').attr('disabled', false);
+				$('#button2').attr('disabled', false);
+			},
+			dataType : 'json',
+			data : {
+				productNum : $('#productNum').val(),
+				choice : 1,
+				articleNum : $('#articleNum').val(),
+				replyType : $('#replyType').val()
+			}
+		});
+	}
+	
+	function reCommentList(){// 대댓글 전체 조회
+		$.ajax({
+			url : "replyList",
+			success: function (data) {
+				for(var i=0; i<data.length; i++){
+				var html = "";
+					if(data[i].depth!=0 || data[i].parentNum!=0){
+						html+='<tr id="'+data[i].replyNum+'" style="border-top:1px solid; background-color:#fff1b4;">';
+						html+='<td style="width:100px;"><img src="/resources/image/turn-right.png" width="15px" height="auto"></td>';
+						html+='<td style="word-break:break-all;">'+data[i].replyContent+'</td>';
+						html+='<td style="width:200px;">'+data[i].nickname+'</td>';
+						html+='</tr>';
+						html+='<tr style="border-top:hidden; background-color:#fff1b4;">';
+						html+='<td><a class="reCommentAdd" href="javascript:;" value="'+data[i].replyNum+'" depth="'+data[i].depth+'">답글달기</a></td>'
+						html+='<td style="text-align:right;">'+data[i].replyDate+'</td>';
+						if($('#logNum').val()==data[i].memberNum){
+							html+='<td colspan="2"><button type="button" class="btn btn-success btn-sm updReply" value="'+data[i].replyNum+'" >수정</button>';
+							html+='<button type="button" class="btn btn-danger btn-sm delReply" value="'+data[i].replyNum+'">삭제</button> </td>';
+						}
+						html+='</tr>';
+						$('#rediv').html(html);
+						$('#td'+data[i].parentNum+':last').append($('#'+data[i].replyNum));
+						$('#td'+data[i].parentNum+':last').append($('#rediv tr'));
+					}
+				}
+			},
+			dataType:'json',
+			data:{
+				productNum : $('#productNum').val(),
+				choice:1
+				,articleNum:$('#articleNum').val()
+				,replyType:$('#replyType').val()
+			}
+		});
 	}
 </script>
 </head>
@@ -134,8 +220,19 @@
 			<input id="productNum" type="hidden" value="${article.productNum }">
 			<input id="logNum" type="hidden" value="${logNum}"> <input
 				id="articleNum" type="hidden" value="${article.articleNum }" />
+			<table id="reCommentTable" style="display: none">
+				<tr id="reComment" style="background-color: ">
+					<td colspan="3">
+						<textarea class="reComment" placeholder="댓글 달기" cols="20"></textarea>
+						<a href="javascript:;" class="reCommentCommit" value="1">등록</a> 
+						<a href="javascript:;" class="reCommentCancle">취소</a> 
+					 	<input type="hidden" value="" class="parentNum">
+					<td>
+				</tr>
+			</table>
 		</div>
 	</div>
 	<div id="div1"></div>
+	<div id="rediv" style="display: none"></div>
 </body>
 </html>

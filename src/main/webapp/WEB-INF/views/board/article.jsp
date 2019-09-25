@@ -310,8 +310,6 @@
 <input id="check" type="hidden" value="${check}"/>
 <input id="pnum" type="hidden" value="${article.productNum}"/>
 <input id="replyType" type="hidden" value="1"/>
-<input value="${choice.CHOICE}">
-<input value="${choice.CNT}">
 
 	<script src="/resources/js/jquery.min.js"></script>
 	<script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
