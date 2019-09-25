@@ -171,6 +171,7 @@
 		$.ajax({
 			url : "replyList",
 			success: function (data) {
+				console.log('▶'+ JSON.stringify(data));
 				for(var i=0; i<data.length; i++){
 				var html = "";
 					if(data[i].depth!=0 || data[i].parentNum!=0){
@@ -180,7 +181,7 @@
 							html+='<td style="width:250px;word-break:break-all;">'+data[i].replyContent+'</td>';
 							console.log('depth1')
 						} else if(data[i].depth==2){
-							html+='<td style="width:250px;word-break:break-all;"><font>'+$('#'+data[i].parentNum).children().last().val()+'</font>'+data[i].replyContent+'</td>';
+							html+='<td style="width:250px;word-break:break-all;"><font color="grey">부모댓닉네임'+$('#'+data[i].parentNum).children().last().val()+'</font>'+data[i].replyContent+'</td>';
 							console.log('depth2')
 						}
 						html+='<td>'+data[i].nickname+'</td>';
@@ -191,17 +192,21 @@
 						if($('#logNum').val()==data[i].memberNum){
 							html+='<td colspan="2"><button type="button" class="btn btn-success btn-sm updReply" value="'+data[i].replyNum+'" >수정</button>';
 							html+='<button type="button" class="btn btn-danger btn-sm delReply" value="'+data[i].replyNum+'">삭제</button> </td>';
+						} else {
+							html += '<td></td>';
 						}
 						html+='</tr>';
 						$('#rediv').html(html);
+						
 						if(data[i].depth==1){
-							$('#td'+data[i].parentNum+':last').append($('#'+data[i].replyNum));
+							$('#td'+data[i].parentNum+':last').append($('#'+data[i].replyNum)).append($('#rediv tr'));
+						    //$('#td'+data[i].parentNum+':last').append($('#rediv tr'));
 						} else if(data[i].depth==2){
 							var grandNum=$('#'+$('#'+data[i].parentNum).attr('parentNum')).attr('id');
-							$('#td'+data[i].parentNum+':last').append($('#'+data[i].replyNum));
-							console.log('부모의 부모 로딩:'+grandNum);
+							$('#td'+grandNum+':last').append($('#'+data[i].replyNum)).append($('#rediv tr'));
+						    //$('#td'+grandNum+':last').append($('#rediv tr'));
 						}
-						$('#td'+data[i].parentNum+':last').append($('#rediv tr'));
+						//alert(">>>"+$('#rediv tr').html())
 					}
 				}
 			},

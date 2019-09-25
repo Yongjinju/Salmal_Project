@@ -55,8 +55,10 @@ public class ReplyController {
 		int logNum = Integer.parseInt(session.getAttribute("logNum").toString());
 		vo.setMemberNum(logNum);
 		System.out.println("부모댓id : " + vo.getParentNum());
-		if (vo.getParentNum() != 0) { // 대댓글이면(부모 댓글id가 있다면) --> depth가 0이면 1로 저장, 1이면 2로 저장, 2이면 2로 저장
+		if(vo.getDepth()==0&&vo.getParentNum()!=0) { // depth가 0이면 1로 저장, 1이면 2로 저장, 2이면 2로 저장
 			vo.setDepth(1);
+		} else if(vo.getDepth()>=1&&vo.getParentNum()!=0){
+			vo.setDepth(2);
 		}
 		System.out.println("깊이 : " + vo.getDepth());
 		dao.addReply(vo);
