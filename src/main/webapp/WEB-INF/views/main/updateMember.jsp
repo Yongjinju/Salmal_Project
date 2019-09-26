@@ -30,6 +30,7 @@
             <br>
             <h2 class="text-center">회원 정보 수정</h2>
             <p class="text-center">비밀번호 혹은 다른사람에게 보여지는 닉네임을 수정할 수 있습니다.</p>
+            <p class="text-center">입력하지 않은 항목은 반영되지 않습니다. 정보수정이 완료되었으면 다시 로그인해 주십시오.</p>
             <hr>
 
             <div class="row row justify-content-center">

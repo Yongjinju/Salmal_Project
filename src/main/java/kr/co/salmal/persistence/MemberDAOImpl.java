@@ -58,7 +58,13 @@ public class MemberDAOImpl implements MemberDAO{
 	public List<Map<String, Object>> selectMyArticlelist(String nickname) {
 		return sqlSession.selectList("member.selectMyArticle", nickname);
 	}
-
+	
+	//내가 댓글을 쓴 글 조회
+	@Override
+	public List<Map<String, Object>> selectArticleWithMyReply(int memberNum) {
+		return sqlSession.selectList("member.selectArticleWithMyReply", memberNum);
+	}
+	
 	//등급조회
 	@Override
 	public int selectPoint(int memberNum) {

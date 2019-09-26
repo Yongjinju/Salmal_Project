@@ -163,72 +163,40 @@
                                         <thead>
                                             <tr>
                                                 <th>글번호</th>
-                                                <th>유형</th>
+                                                <th>말머리</th>
                                                 <th>작성자</th>
                                                 <th>글제목</th>
                                                 <th>작성시간</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>359</td>
-                                                <td>#살까말까</td>
-                                                <td>홍길동</td>
-                                                <td>이것 좀 봐주실분?</td>
-                                                <td>2019-08-31</td>
-                                            </tr>
-                                            <tr>
-                                                <td>380</td>
-                                                <td>#골라줘</td>
-                                                <td>길라임</td>
-                                                <td>선택장애가 왔어요 도와주세요.</td>
-                                                <td>2019-08-31</td>
-                                            </tr>
+                                            <c:forEach items="${articleWithMyReplyList }" var="myReplyList">
+	                                            <tr>
+	                                                <td>${myReplyList.ARTICLENUM }</td>
+	                                                <td>${myReplyList.PRODUCTCNT}</td>
+	                                                <c:if test="${myReplyList.PRODUCTCNT eq '#이거어때?' }">
+														<td class="text-center ">
+															<a href="article?articleNum=<c:out value="${myReplyList.ARTICLENUM}"></c:out>">
+																<c:out value="${myReplyList.ARTICLETITLE }..."></c:out>
+															</a>
+ 														</td>
+													</c:if>
+													<c:if test="${myReplyList.PRODUCTCNT eq '#골라줘' }">
+														<td class="text-center "><a href="article2?articleNum=<c:out value="${myReplyList.ARTICLENUM}"></c:out>">
+															<c:out value="${myReplyList.ARTICLETITLE }..."></c:out></a>
+														</td>
+													</c:if>
+	                                                <td>${myReplyList.NICKNAME }</td>
+	                                                <td><fmt:formatDate value="${myReplyList.ARTICLEDATE }" pattern="yyyy-MM-dd HH:mm"/></td>
+	                                             </tr>
+                                        	</c:forEach>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
-                        <div id="card-217326">
-                            <div class="card">
-                                <div class="card-header">
-                                    <a class="collapsed card-link" data-toggle="collapse" data-parent="#card-217326" href="#card-element-886440">내가 말까를 선택한 게시물 조회</a>
-                                </div>
-                                <div id="card-element-886440" class="collapse">
-                                    <div class="card-body">
-                                        <table class="table text-center table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>글번호</th>
-                                                    <th>유형</th>
-                                                    <th>작성자</th>
-                                                    <th>글제목</th>
-                                                    <th>작성시간</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>359</td>
-                                                    <td>#살까말까</td>
-                                                    <td>홍길동</td>
-                                                    <td>이것 좀 봐주실분?</td>
-                                                    <td>2019-08-31</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>380</td>
-                                                    <td>#골라줘</td>
-                                                    <td>길라임</td>
-                                                    <td>선택장애가 왔어요 도와주세요.</td>
-                                                    <td>2019-08-31</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> 
-<!-- 			            <a id="modal-679956" href="#modal-container-679956" role="button" class="btn btn-danger" data-toggle="modal">회원 탈퇴하기</a> -->
-			            <br><button class="btn btn-primary float-right" onclick="history.back()">뒤로가기</button>
+ 			            <br><a id="modal-679956" href="#modal-container-679956" role="button" class="btn btn-danger" data-toggle="modal">회원 탈퇴하기</a>
+			            <button class="btn btn-primary float-right" onclick="history.back()">뒤로가기</button>
 			
 			            <div class="modal fade" id="modal-container-679956" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 				            <div class="modal-dialog" role="document">
@@ -242,7 +210,7 @@
                                         </button>
                                     </div>
 						            <div class="modal-body">
-                                        탈퇴처리된 회원은 어떠한 일이 있어도 복구할 수 없습니다. <br>탈퇴하시겠습니까?
+                                        작성한 게시물이 모두 삭제되며, 탈퇴처리된 회원은 어떠한 일이 있어도 복구할 수 없습니다. <br>탈퇴하시겠습니까?
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-danger" id="withdraw" onclick="location.href='/Salmal/withdraw?email=${member.email}'">

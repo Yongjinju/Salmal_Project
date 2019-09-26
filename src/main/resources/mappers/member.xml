@@ -65,12 +65,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<!-- 내가 댓글을 등록한 게시물 조회 -->
-	<select id="selectArticleWithMyReply">
-		select articlenum, nickname, articletitle, articledate, (select count(productNum)
-		                                                        from product
-		                                                        where articlenum = a.articlenum ) productcnt
-		from article a , member m 
-		where a.membernum = m.membernum and nickname=#{nickname}??                                                        
+	<select id="selectArticleWithMyReply" resultType="java.util.HashMap">
+		select a.articlenum, (select nickname
+								from MEMBER
+								where memberNum=a.memberNum) nickname, articletitle, articledate, (select count(productNum)
+																								from product
+																								where articlenum = a.articlenum ) productcnt
+		from article a , member m , reply r, product p
+		where r.membernum =#{membernum}
+		      and r.membernum = m.membernum
+		      and p.productnum= r.productnum
+		      and a.articlenum = p.articlenum                                                    
 	</select>
 
 

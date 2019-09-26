@@ -15,6 +15,7 @@ public interface MemberDAO {
 	public MemberVO selectMemberInfo(int memberNum);
 	
 	public List<Map<String, Object>> selectMyArticlelist(String nickname);//내가 쓴 글 조회
+	public List<Map<String, Object>> selectArticleWithMyReply(int memberNum);//내가 쓴 글 조회
 	
 	public int selectPoint(int memberNum); //등급조회
 }
