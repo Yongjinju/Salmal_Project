@@ -6,11 +6,15 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import kr.co.salmal.domain.MailVO;
 import kr.co.salmal.domain.MemberVO;
 import kr.co.salmal.persistence.ArticleDAO;
 import kr.co.salmal.persistence.MemberDAO;
@@ -32,6 +37,9 @@ public class MainController {
 
 	@Autowired
 	private MemberDAO mdao;
+	
+	@Autowired
+	private JavaMailSender mailSender;
 
 	@RequestMapping("/main")
 	public String mainView(Model m) {
@@ -72,6 +80,21 @@ public class MainController {
 	@PostMapping("/signUp")
 	public String insertMember(MemberVO member) {
 		mdao.insert(member);
+		System.out.println("member정보 : "+member);
+		final MimeMessagePreparator preparator = new MimeMessagePreparator() {
+			
+			@Override
+			public void prepare(MimeMessage mimeMessage) throws Exception {
+				final MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+				helper.setFrom("SalkkaMalkka <salkkamalkkainfo@gmail.com>");
+				helper.setTo(member.getEmail()); //받는사람 이메일
+				helper.setSubject("[살까말까]살까말까 회원가입을 환영합니다"); //제목
+				helper.setText("살까말까 회원가입을 축하합니다."); // 내용
+			}
+		};
+		
+		mailSender.send(preparator);
+		
 		return "redirect:welcome";
 	}
 	
