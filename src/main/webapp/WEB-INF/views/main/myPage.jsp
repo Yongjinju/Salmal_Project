@@ -155,7 +155,7 @@
                         </div>
                         <div class="card">
                             <div class="card-header">
-                                    <a class="card-link collapsed" data-toggle="collapse" data-parent="#card-990375" href="#card-element-946878">내가 살까를 선택한 게시물 조회</a>
+                                    <a class="card-link collapsed" data-toggle="collapse" data-parent="#card-990375" href="#card-element-946878">내가 댓글을 입력한 게시물 조회</a>
                             </div>
                             <div id="card-element-946878" class="collapse">
                                 <div class="card-body">
