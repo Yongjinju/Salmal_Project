@@ -54,10 +54,10 @@
            <c:if test="${myPoint le 10}">
   				<img src="/resources/image/level1.png" height="50" width="50" align="top">
   			</c:if>
-		   <c:if test="${myPoint gt 10 && myPoint le 20}">
+		   <c:if test="${myPoint gt 10 && myPoint le 30}">
   				<img src="/resources/image/level2.png" height="50" width="50" align="top">
            </c:if>
-           <c:if test="${myPoint gt 20 && myPoint le 30}">
+           <c:if test="${myPoint gt 30 }">
   				<img src="/resources/image/level3.png" height="50" width="50" align="top">
            </c:if>
              ${member.nickname }님의 마이페이지</h2>
