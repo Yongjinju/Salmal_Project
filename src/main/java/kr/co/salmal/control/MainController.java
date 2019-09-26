@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import kr.co.salmal.domain.MailVO;
 import kr.co.salmal.domain.MemberVO;
 import kr.co.salmal.persistence.ArticleDAO;
 import kr.co.salmal.persistence.MemberDAO;
