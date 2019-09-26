@@ -23,7 +23,7 @@
 
 <script type="text/javascript">
 
-	function selectChoice(){
+function selectChoice(){
 	$.ajax({
 		url : "selectChoice",
 		success: function (choice) {

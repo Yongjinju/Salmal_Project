@@ -93,4 +93,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from dual
 	</select>
 	
+	<!--중복 이메일,닉네임 조회  -->
+	<select id ="checkEmail" resultType="int">
+		select count(*) 
+		from member 
+		where email=#{email}
+	</select>
+	
+	<select id = "checkNickname" resultType="int">
+		select count(*)
+		from member
+		where nickname=#{nickname}
+	</select>
+	
 </mapper>
