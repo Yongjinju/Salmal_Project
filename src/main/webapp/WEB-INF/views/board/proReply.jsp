@@ -40,7 +40,9 @@
 			} else {
 				if($(this).html()=='수정'){
 					$(this).html('변경');
-					$('#'+id).find(':nth-child(2):eq(0)').html('<input size=30 type=text value="' + $('#' + id).find(':nth-child(2)').html()+ '">')
+					//$('#'+id).find(':nth-child(2):eq(0)').html('<input size=30 type=text value="' + $('#' + id).find(':nth-child(2)').html()+ '">')
+					console.log($('#content'+id).attr('id'));
+					$('#content'+id).html('<input size=30 type=text value="' + $('#content' + id).html()+ '">')
 				} else {
 					$.ajax({
 						url:"updReply",
@@ -134,7 +136,7 @@
 					if(data[i].depth==0 && data[i].parentNum==0){
 						html+='<tbody id="td'+data[i].replyNum+'"><tr id="'+data[i].replyNum+'" style="border-top:1px solid; background-color: #ffffd3;">'
 						html+='<td style="width:90px;">'+(cnt+1)+'</td>';
-						html+='<td style="width:250px;word-break:break-all">'+data[i].replyContent+'</td>';
+						html+='<td style="width:250px;word-break:break-all"><span id="content'+data[i].replyNum+'">'+data[i].replyContent+'</span></td>';
 						html+='<td>'+data[i].nickname+'</td>';
 						html+='</tr>';
 						html+='<tr style="border-top:hidden; background-color: #ffffd3;">';
@@ -175,14 +177,12 @@
 				for(var i=0; i<data.length; i++){
 				var html = "";
 					if(data[i].depth!=0 || data[i].parentNum!=0){
-						html+='<tr id="'+data[i].replyNum+'" parentNum="'+data[i].parentNum+'" style="border-top:1px solid; background-color:#fff1b4;">';
+						html+='<tr id="'+data[i].replyNum+'" parentNum="'+data[i].parentNum+'" depth="'+data[i].depth+'"style="border-top:1px solid; background-color:#fff1b4;">';
 						html+='<td style="width:90px;"><img src="/resources/image/turn-right.png" width="15px" height="auto"></td>';
 						if(data[i].depth==1){
-							html+='<td style="width:250px;word-break:break-all;">'+data[i].replyContent+'</td>';
-							console.log('depth1')
+							html+='<td style="width:250px;word-break:break-all;"><span id="content'+data[i].replyNum+'">'+data[i].replyContent+'</span></td>';
 						} else if(data[i].depth==2){
-							html+='<td style="width:250px;word-break:break-all;"><font color="grey">부모댓닉네임'+$('#'+data[i].parentNum).children().last().val()+'</font>'+data[i].replyContent+'</td>';
-							console.log('depth2')
+							html+='<td style="width:250px;word-break:break-all;"><font color="#a2a2a2" size="2">@'+$('#'+data[i].parentNum).find('td').last().html()+'</font><span id="content'+data[i].replyNum+'">'+data[i].replyContent+'</span></td>';
 						}
 						html+='<td>'+data[i].nickname+'</td>';
 						html+='</tr>';
@@ -202,8 +202,17 @@
 							$('#td'+data[i].parentNum+':last').append($('#'+data[i].replyNum)).append($('#rediv tr'));
 						    //$('#td'+data[i].parentNum+':last').append($('#rediv tr'));
 						} else if(data[i].depth==2){
-							var grandNum=$('#'+$('#'+data[i].parentNum).attr('parentNum')).attr('id');
-							$('#td'+grandNum+':last').append($('#'+data[i].replyNum)).append($('#rediv tr'));
+							var grandNum="";
+							if($('#'+data[i].parentNum).attr('depth')==2){
+								//grendNum=$('#'+$('#'+data[i].parentNum).attr('parentNum')).attr('id');
+								grandNum=$('#'+($('#'+$('#'+data[i].parentNum).attr('parentNum'))).attr('parentNum')).attr('id');
+								console.log(data[i].replyNum+':부모댓이 깊이: 2 , 조상: '+grandNum);
+								$('#td'+grandNum+':last').append($('#'+data[i].replyNum)).append($('#rediv tr'));
+							} else if ($('#'+data[i].parentNum).attr('depth')==1){
+								grandNum=$('#'+$('#'+data[i].parentNum).attr('parentNum')).attr('id');
+								console.log(data[i].replyNum+':부모댓이 깊이: 1 , 조상: '+grandNum);
+								$('#td'+grandNum+':last').append($('#'+data[i].replyNum)).append($('#rediv tr'));
+							}
 						    //$('#td'+grandNum+':last').append($('#rediv tr'));
 						}
 						//alert(">>>"+$('#rediv tr').html())
@@ -236,6 +245,7 @@
 			<input id="productNum" type="hidden" value="${article.productNum }">
 			<input id="logNum" type="hidden" value="${logNum}"> <input
 				id="articleNum" type="hidden" value="${article.articleNum }" />
+			<input id="parentNick" type="hidden" value=""/>
 			<input id="depth" type="hidden" value="">
 			<table id="reCommentTable" style="display: none">
 				<tr id="reComment" style="background-color: ">
