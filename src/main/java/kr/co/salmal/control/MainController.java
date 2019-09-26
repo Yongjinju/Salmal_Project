@@ -3,6 +3,7 @@ package kr.co.salmal.control;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,9 +18,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.salmal.domain.MemberVO;
+import kr.co.salmal.domain.RatingVO;
 import kr.co.salmal.persistence.ArticleDAO;
 import kr.co.salmal.persistence.MemberDAO;
 
@@ -66,6 +69,18 @@ public class MainController {
 	@GetMapping("/signUp")
 	public String signUp() {
 		return "main/signUp";
+	}
+	
+	@RequestMapping("/checkEmail")
+	public @ResponseBody int checkEmail(String email) {
+		return  mdao.checkEmail(email);
+	
+	}
+	
+	@RequestMapping("/checkNickname")
+	public @ResponseBody int checkNickname(String nickname) {
+		return mdao.checkNickname(nickname);
+	
 	}
 	
 	// 회원가입 처리 (DB에 회원 정보 insert)

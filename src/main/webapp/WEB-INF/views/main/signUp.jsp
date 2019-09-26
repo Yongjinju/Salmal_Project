@@ -19,24 +19,56 @@
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/2fabbfb053.js"></script>
-        <script>
+        <script src="/resources/js/jquery-3.js"></script>
+        
+        
+        <!-- <script>
             $(function(){//[비밀번호]입력과[비밀번호 확인]의 문구가 같은지 아닌지를 체크함.
                 $("#pwpattern").hide();
                 $("#alert-success").hide();
                 $("#alert-danger").hide();
                 $("#alert-warning").hide();
+                
+                $("#alert-danger_email").hide();
+                $("#alert-danger_nickname").hide();               
+            	
                 $("input").keyup(function(){
+                
+                 	$.ajax({
+                		url : "checkEmail",
+                		success: function (data) {
+                			if(data>0){//중복
+                				$("#alert-danger_email").show();
+                			}
+                		},
+                		data:{
+                			email:$("#email").val()
+                		}
+                	})
+                	
+                	$.ajax({
+                		url : "checkNickname",
+                		success: function (data) {
+                			if(data>0){//중복
+                				 $("#alert-danger_nickname").show();
+                			}
+                		},
+                		data:{
+                			nickname:$("#nickname").val()
+                		}
+                	})
 
                     var passRule = /^[A-Za-z0-9]{6,12}$/;//6문자 이상 12문자 이하의 영숫자 혼용만 받겠음.
                     var pass1=$("#password").val();
                     var pass2=$("#password2").val();
                     
+             
                     if (pass1 =="" && pass2 == ""){
 		                $("#alert-success").hide();
 		                $("#alert-danger").hide();
 		                $("#alert-warning").hide();
-                    	} else if (pass1 != "" || pass2 != "") {
-                            if(pass1 != pass2){ // 비밀번호와 확인이 일치하지 않으면 경고
+                    } else if (pass1 != "" || pass2 != "") {
+                           if(pass1 != pass2){ // 비밀번호와 확인이 일치하지 않으면 경고
                                 $("#alert-success").hide();
                                 $("#alert-danger").show();
                                 $("#submit").attr("disabled","disabled");
@@ -46,18 +78,125 @@
                                 if (!passRule.test(pass1)) { // 정규식과 비밀번호 패턴이 안 맞으면 경고
                                     $("#submit").attr("disabled","disabled");
                                     $("#alert-warning").show();
-                                } else { // 모두를 만족하면 회원가입버튼이 활성화됨
-                                    $("#submit").removeAttr("disabled");
-                                    $("#alert-warning").hide();
+                                } else { 
+                                	// 모두를 만족하면 회원가입버튼이 활성화됨
+                                	$("#submit").removeAttr("disabled");
+                                	$("#alert-warning").hide();
                                 }
                                 
-                            } 
-                        }
-                    });
-                });
-                    //성별을 올바르게 선택하도록 하는 기능이 필요
+                           } 
+                     }
+                 });
+             });
         
-        </script>
+        </script> -->
+        
+        <script>
+            $(function(){//[비밀번호]입력과[비밀번호 확인]의 문구가 같은지 아닌지를 체크함.
+                $("#pwpattern").hide();
+               $("#alert-success").hide();
+               $("#alert-danger").hide();
+               $("#alert-warning").hide();
+               $("#alert-danger_email").hide();
+               $("#alert-danger_nickname").hide();
+               
+               var passOK="";
+               var emailOK="";
+               var nicknameOK="";
+               
+               $(".passck").keyup(function(){
+            	   //checkAll();
+            	   $("#submit").attr("disabled","disabled");
+                   passOK="";
+                    var passRule = /^[A-Za-z0-9]{6,12}$/;//6문자 이상 12문자 이하의 영숫자 혼용만 받겠음.
+                    var pass1=$("#password").val();
+                    var pass2=$("#password2").val();
+                        
+                    if (pass1 =="" && pass2 == ""){
+                        $("#alert-success").hide();
+                        $("#alert-danger").hide();
+                        $("#alert-warning").hide();
+                    } else if (pass1 != "" || pass2 != "") {
+                        if(pass1 != pass2){ // 비밀번호와 확인이 일치하지 않으면 경고
+                            $("#alert-success").hide();
+                            $("#alert-danger").show();
+                            $("#submit").attr("disabled","disabled");
+                        } else if(pass1 == pass2) { //비밀번호와 확인창이 일치
+                            $("#alert-success").show();
+                            $("#alert-danger").hide();
+                            if (!passRule.test(pass1)) { // 정규식과 비밀번호 패턴이 안 맞으면 경고
+                                $("#submit").attr("disabled","disabled");
+                                $("#alert-warning").show();
+                            } else { // 모두를 만족하면 회원가입버튼이 활성화됨
+                                passOK="Ok";
+                                $("#alert-warning").hide();
+                                checkAll();
+                            }
+                            
+                        }
+                    }
+              });
+              $('#email').keyup(function(){
+            	  //checkAll();
+            	  $("#submit").attr("disabled","disabled");
+                  emailOK="";
+                  $.ajax({
+                      url:"checkEmail",
+                      data:{
+                          email:$('#email').val()
+                      },
+                      success:function(data){
+                    	  console.log(data);
+                          if(data==0){
+                        	  $("#alert-danger_email").hide()
+                               emailOK="Ok";
+                        	  checkAll();
+                          } else {
+                        	  $("#alert-danger_email").show()
+                          }
+                      },
+                      async:false
+                  });
+              });
+              
+              $('.nicknameCk').keyup(function(){
+            	  //checkAll();
+            	  $("#submit").attr("disabled","disabled");
+                  nicknameOK="";
+                  $.ajax({
+                      url:"checkNickname",
+                      data:{
+                          nickname:$('#nickname').val()
+                      },
+                      success:function(data){
+                          if(data==0){
+                        	  $("#alert-danger_nickname").hide()
+                              nicknameOK="Ok";
+                          } else {
+                        	  $("#alert-danger_nickname").show()
+                          }
+                      },
+                      async:false
+                  });
+              });
+              
+	        function checkAll(){
+	        	if((passOK=='Ok'&& emailOK=='Ok') && nicknameOK=='Ok'){
+	             $("#submit").removeAttr("disabled");
+	         	}else{
+                    $("#submit").attr("disabled","disabled");
+
+	         	}
+	        }
+             
+         });
+            
+                 
+            
+            
+            
+       </script>
+        
         <title>회원가입</title>
     </head>
     <body>
@@ -78,12 +217,13 @@
                             <!-- Text input-->
                             <div class="form-group">
                               <label class="control-label" for="email">이메일</label>  
-                              <input id="email" name="email" type="email" placeholder="salmal@mail.com" class="form-control input-md" required>
+                              <input id="email" name="email" type="email" placeholder="salmal@mail.com" class="form-control input-md emailCk" required>
                             </div>
+                            <div class="alert alert-danger" id="alert-danger_email">중복된 이메일 입니다.</div>
                             <!-- Text input-->
                             <div class="form-group">
                                 <label class="control-label" for="password">비밀번호</label>  
-                                <input id="password" name="password" type="password" placeholder="6~12자의 영문/숫자 조합?" class="form-control input-md" required>
+                                <input id="password" name="password" type="password" placeholder="6~12자의 영문/숫자 조합?" class="form-control input-md passck" required>
                             </div>
                             <div class="alert alert-danger" id="pwpattern">비밀번호 형식이 올바르지않습니다.</div>
 
@@ -91,17 +231,17 @@
                             <div class="form-group">
                               <label class="control-label" for="pass2">비밀번호 확인</label>  
                               
-                              <input id="password2" name="password2" type="password" placeholder="" class="form-control input-md" required>
+                              <input id="password2" name="password2" type="password" placeholder="" class="form-control input-md passck" required>
                             </div>
                             
                             <div class="alert alert-success" id="alert-success">비밀번호가 일치합니다.</div>
                             <div class="alert alert-danger" id="alert-danger">비밀번호가 일치하지 않습니다.</div>
-                            <div class="alert alert-warning" id="alert-warning">비밀번호 형식이 올바르지 않습니다.</div>
                             
                             <!-- Text input-->
                             <div class="form-group">
                               <label class="control-label" for="nickname">닉네임</label>  
-                              <input id="nickname" name="nickname" type="text" placeholder="닉네임을 입력하세요." class="form-control input-md" required>
+                              <input id="nickname" name="nickname" type="text" placeholder="닉네임을 입력하세요." class="form-control input-md nicknameCk" required>
+                            	 <div class="alert alert-danger" id="alert-danger_nickname">중복된 닉네임 입니다.</div>
                             </div>
                             
                             <!-- Select Basic -->
