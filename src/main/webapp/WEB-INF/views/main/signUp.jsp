@@ -160,24 +160,27 @@
               });
               
               $('.nicknameCk').keyup(function(){
-            	  //checkAll();
             	  $("#submit").attr("disabled","disabled");
                   nicknameOK="";
-                  $.ajax({
-                      url:"checkNickname",
-                      data:{
-                          nickname:$('#nickname').val()
-                      },
-                      success:function(data){
-                          if(data==0){
-                        	  $("#alert-danger_nickname").hide()
-                              nicknameOK="Ok";
-                          } else {
-                        	  $("#alert-danger_nickname").show()
-                          }
-                      },
-                      async:false
-                  });
+                  if($('#nickname').val().length!=0){
+	                  $.ajax({
+	                      url:"checkNickname",
+	                      data:{
+	                          nickname:$('#nickname').val()
+	                      },
+	                      success:function(data){
+	                          if(data==0){
+	                        	  $("#alert-danger_nickname").hide()
+	                              nicknameOK="Ok";
+	                        	  checkAll();
+	                          } else {
+	                              nicknameOK="";
+	                        	  $("#alert-danger_nickname").show()
+	                          }
+	                      },
+	                      async:false
+	                  });
+                  }
               });
               
 	        function checkAll(){
