@@ -12,7 +12,7 @@
 	$(function(){
 		replyList2();
 		reCommentList2();
-		$('#button2').click(function(){
+		$('#button2').click(function(){//댓글 추가
 			if($('#inputConReply').val()==""){
 				alert('댓글을 입력하세요!');
 			} else {
@@ -40,7 +40,7 @@
 			} else {
 				if($(this).html()=='수정'){
 					$(this).html('변경');
-					$('#'+id).find(':nth-child(2):eq(0)').html('<input size=4 type=text value="' + $('#' + id).find(':nth-child(2)').html()+ '">')
+					$('#content'+id).html('<input size=30 type=text value="' + $('#content' + id).html()+ '">')
 				} else {
 					$.ajax({
 						url:"updReply",
@@ -60,6 +60,8 @@
 		$('#div2').on('click','.delReply',function(){ //댓글 삭제
 			var i = confirm('정말 삭제하시겠습니까?');
 			if(i){
+				$('.reComment').val("");
+				$('#reCommentTable').append($('#reComment'));
 				$.ajax({
 					url:"delReply",
 					data:{
@@ -77,7 +79,10 @@
 		//대댓글 달기 클릭
 		$('#div2').on('click', '.reCommentAdd', function(){
 			var trId=$(this).attr('value');//부모댓글id
+			var parentDepth=$(this).attr('depth');//부모댓글깊이
 			console.log(trId);
+			console.log(parentDepth);
+			$('#depth2').val(parentDepth);//hidden에 부모댓글 깊이 저장
 			$('.parentNum').val(trId);//hidden에 부모댓글id저장
 			$('.reComment').val(""); //textarea초기화
 			$('#'+trId).next().after($('#reComment'));//textarea위치수정
@@ -97,13 +102,13 @@
 						replyContent : $('.reComment').val(),
 						productNum:$('#productNum').val(),
 						parentNum:$('.parentNum').val(),
+						depth:$('#depth2').val()
 					},
 					success:function(data){
 						replyList2();
 						reCommentList2();
 						$('.reComment').val("");
 						$('#reCommentTable').append($('#reComment'));
-						console.log(data)
 					}
 				});
 			}
@@ -133,7 +138,7 @@
 						html+='<td>'+data[i].nickname+'</td>';
 						html+='</tr>';
 						html+='<tr style="border-top:hidden; background-color: #ffffd3;">';
-						html+='<td><a class="reCommentAdd" href="javascript:;" value="'+data[i].replyNum+'">답글달기</a></td>'
+						html+='<td><a class="reCommentAdd" href="javascript:;" value="'+data[i].replyNum+'" depth="'+data[i].depth+'">답글달기</a></td>';
 						html+='<td>'+data[i].replyDate+'</td>';
 						if($('#logNum').val()==data[i].memberNum){
 							html+='<td colspan="2"><button type="button" class="btn btn-success btn-sm updReply" value="'+data[i].replyNum+'" >수정</button>';
@@ -167,22 +172,27 @@
 				for(var i=0; i<data.length; i++){
 				var html = "";
 					if(data[i].depth!=0 || data[i].parentNum!=0){
-						html+='<tr id="'+data[i].replyNum+'" style="border-top:1px solid; background-color:#fff1b4;">';
+						html+='<tr id="'+data[i].replyNum+'" parentNum="'+data[i].parentNum+'" depth="'+data[i].depth+'"style="border-top:1px solid; background-color:#fff1b4;">';
 						html+='<td style="width:90px;"><img src="/resources/image/turn-right.png" width="15px" height="auto"></td>';
-						html+='<td style="width:250px;word-break:break-all;">'+data[i].replyContent+'</td>';
+						if(data[i].depth==1){
+							html+='<td style="width:250px;word-break:break-all;"><span id="content'+data[i].replyNum+'">'+data[i].replyContent+'</span></td>';
+						} else if(data[i].depth==2){
+							html+='<td style="width:250px;word-break:break-all;"><font color="#a2a2a2" size="2">@'+$('#'+data[i].parentNum).find('td').last().html()+'</font><span id="content'+data[i].replyNum+'">'+data[i].replyContent+'</span></td>';
+						}
 						html+='<td>'+data[i].nickname+'</td>';
 						html+='</tr>';
 						html+='<tr style="border-top:hidden; background-color:#fff1b4;">';
-						html+='<td><a class="reCommentAdd" href="javascript:;" value="'+data[i].replyNum+'">답글달기</a></td>'
+						html+='<td><a class="reCommentAdd" href="javascript:;" value="'+data[i].replyNum+'" depth="'+data[i].depth+'">답글달기</a></td>'
 						html+='<td>'+data[i].replyDate+'</td>';
 						if($('#logNum').val()==data[i].memberNum){
 							html+='<td colspan="2"><button type="button" class="btn btn-success btn-sm updReply" value="'+data[i].replyNum+'" >수정</button>';
 							html+='<button type="button" class="btn btn-danger btn-sm delReply" value="'+data[i].replyNum+'">삭제</button> </td>';
+						} else {
+							html += '<td></td>';
 						}
 						html+='</tr>';
 						$('#rediv').html(html);
-						$('#td'+data[i].parentNum+':last').append($('#'+data[i].replyNum));
-						$('#td'+data[i].parentNum+':last').append($('#rediv tr'));
+						$('#'+data[i].parentNum).closest('tbody').append($('#rediv tr'));
 					}
 				}
 			},
@@ -209,6 +219,7 @@
 			<button id="button2" type="button" class="btn btn-primary" disabled="disabled">등록</button>
 			<input id="productNum" type="hidden" value="${article.productNum }">
 			<input id="logNum" type="hidden" value="${logNum}">
+			<input id="depth2" type="hidden" value="">
 		</div>
 	</div>
 	<div id="div2">

@@ -26,46 +26,43 @@
 					success : function(data) {
 						replyList();
 						reCommentList();
+						$('#reCommentTable').append($('#reComment')); //대댓글입력창 원래 자리로
 						$('#inputProReply').val("");
 					}
 				});
 			}
 		});
 
-		$('#div1').on(
-				'click',
-				'.updReply',
-				function() { //댓글 수정
-					var id = $(this).val();
-					if (($('#' + id).find('input').val()) == "") {
-						alert('댓글을 입력하세요!');
-					} else {
-						if ($(this).html() == '수정') {
-							$(this).html('변경');
-							$('#' + id).find(':nth-child(2):eq(0)').html(
-									'<input size=30 type=text value="'
-											+ $('#' + id).find(':nth-child(2)')
-													.html() + '">')
-						} else {
-							$.ajax({
-								url : "updReply",
-								data : {
-									replyNum : $(this).val(),
-									replyContent : $('#' + id).find('input')
-											.val()
-								},
-								success : function() {
-									replyList();
-									reCommentList();
-								}
-							});
+		$('#div1').on('click','.updReply',function(){ //댓글 수정
+			var id = $(this).val();
+			if(($('#'+id).find('input').val())==""){
+				alert('댓글을 입력하세요!');
+			} else {
+				if($(this).html()=='수정'){
+					$(this).html('변경');
+					console.log($('#content'+id).attr('id'));
+					$('#content'+id).html('<input size=30 type=text value="' + $('#content' + id).html()+ '">')
+				} else {
+					$.ajax({
+						url:"updReply",
+						data:{
+							replyNum : $(this).val(),
+							replyContent : $('#'+id).find('input').val()
+						},
+						success:function(){
+							replyList();
+							reCommentList();
 						}
-					}
-				});
+					});
+				}
+			}
+		});
 
 		$('#div1').on('click', '.delReply', function() { //댓글 삭제
 			var i = confirm('정말 삭제하시겠습니까?');
 			if (i) {
+				$('.reComment').val("");
+				$('#reCommentTable').append($('#reComment'));
 				$.ajax({
 					url : "delReply",
 					data : {
@@ -86,6 +83,7 @@
 			var parentDepth=$(this).attr('depth');//부모댓글깊이
 			console.log(trId);
 			console.log(parentDepth);
+			$('#depth').val(parentDepth);//hidden에 부모댓글 깊이 저장
 			$('.parentNum').val(trId);//hidden에 부모댓글id저장
 			$('.reComment').val(""); //textarea초기화
 			$('#'+trId).next().after($('#reComment'));//textarea위치수정
@@ -105,6 +103,7 @@
 						replyContent : $('.reComment').val(),
 						productNum:$('#productNum').val(),
 						parentNum:$('.parentNum').val(),
+						depth:$('#depth').val()
 					},
 					success:function(data){
 						replyList();
@@ -129,31 +128,31 @@
 	function replyList() {//댓글 전체 조회
 		$.ajax({
 			url : "replyList",
-			success : function(data) {
+			success: function (data) {
 				var html = "<table class='table text-center table-hover'>";
 				html += "<thead><tr><th>번호</th><th>내용</th><th>글쓴이</th></tr></thead>";
-				var cnt = 0;
-				for (var i = 0; i < data.length; i++) {
+				var cnt=0;
+				for(var i=0; i<data.length; i++){
 					if(data[i].depth==0 && data[i].parentNum==0){
-						html += '<tbody id="td'+data[i].replyNum+'"><tr id="'+data[i].replyNum+'" style="border-top:1px solid;">'
-						html += '<td style="width:100px;">' + (cnt + 1)+ '</td>';
-						html += '<td style="word-break:break-all">'+ data[i].replyContent + '</td>';
-						html += '<td style="width:200px;">'+ data[i].nickname + '</td>';
-						html += '</tr>';
-						html += '<tr style="border-top:hidden;">';
-						html += '<td><a class="reCommentAdd" href="javascript:;" value="'+data[i].replyNum+'" depth="'+data[i].depth+'">답글달기</a></td>';
-						html += '<td style="text-align:right;">'+ data[i].replyDate + '</td>';
-						if ($('#logNum').val() == data[i].memberNum) {
-							html += '<td><button type="button" class="btn btn-success btn-sm updReply" value="'+data[i].replyNum+'" >수정</button>';
-							html += '<button type="button" class="btn btn-danger btn-sm delReply" value="'+data[i].replyNum+'">삭제</button> </td>';
+						html+='<tbody id="td'+data[i].replyNum+'"><tr id="'+data[i].replyNum+'" style="border-top:1px solid; background-color: #ffffd3;">'
+						html+='<td style="width:90px;">'+(cnt+1)+'</td>';
+						html+='<td style="width:250px;word-break:break-all"><span id="content'+data[i].replyNum+'">'+data[i].replyContent+'</span></td>';
+						html+='<td>'+data[i].nickname+'</td>';
+						html+='</tr>';
+						html+='<tr style="border-top:hidden; background-color: #ffffd3;">';
+						html+='<td><a class="reCommentAdd" href="javascript:;" value="'+data[i].replyNum+'" depth="'+data[i].depth+'">답글달기</a></td>';
+						html+='<td>'+data[i].replyDate+'</td>';
+						if($('#logNum').val()==data[i].memberNum){
+							html+='<td colspan="2"><button type="button" class="btn btn-success btn-sm updReply" value="'+data[i].replyNum+'" >수정</button>';
+							html+='<button type="button" class="btn btn-danger btn-sm delReply" value="'+data[i].replyNum+'">삭제</button> </td>';
 						} else {
 							html += '<td></td>'
 						}
+						html+='</tr></tbody>';
+						cnt=cnt+1;
 					}
-					html += '</tr></tbody>';
-					cnt += 1;
 				}
-				html += '</table>';
+				html+='</table>';
 				$('#div1').html(html);
 				$('#button1').attr('disabled', false);
 				$('#button2').attr('disabled', false);
@@ -172,25 +171,31 @@
 		$.ajax({
 			url : "replyList",
 			success: function (data) {
+				console.log('▶'+ JSON.stringify(data));
 				for(var i=0; i<data.length; i++){
 				var html = "";
 					if(data[i].depth!=0 || data[i].parentNum!=0){
-						html+='<tr id="'+data[i].replyNum+'" style="border-top:1px solid; background-color:#fff1b4;">';
-						html+='<td style="width:100px;"><img src="/resources/image/turn-right.png" width="15px" height="auto"></td>';
-						html+='<td style="word-break:break-all;">'+data[i].replyContent+'</td>';
-						html+='<td style="width:200px;">'+data[i].nickname+'</td>';
+						html+='<tr id="'+data[i].replyNum+'" parentNum="'+data[i].parentNum+'" depth="'+data[i].depth+'"style="border-top:1px solid; background-color:#fff1b4;">';
+						html+='<td style="width:90px;"><img src="/resources/image/turn-right.png" width="15px" height="auto"></td>';
+						if(data[i].depth==1){
+							html+='<td style="width:250px;word-break:break-all;"><span id="content'+data[i].replyNum+'">'+data[i].replyContent+'</span></td>';
+						} else if(data[i].depth==2){
+							html+='<td style="width:250px;word-break:break-all;"><font color="#a2a2a2" size="2">@'+$('#'+data[i].parentNum).find('td').last().html()+'</font><span id="content'+data[i].replyNum+'">'+data[i].replyContent+'</span></td>';
+						}
+						html+='<td>'+data[i].nickname+'</td>';
 						html+='</tr>';
 						html+='<tr style="border-top:hidden; background-color:#fff1b4;">';
 						html+='<td><a class="reCommentAdd" href="javascript:;" value="'+data[i].replyNum+'" depth="'+data[i].depth+'">답글달기</a></td>'
-						html+='<td style="text-align:right;">'+data[i].replyDate+'</td>';
+						html+='<td>'+data[i].replyDate+'</td>';
 						if($('#logNum').val()==data[i].memberNum){
 							html+='<td colspan="2"><button type="button" class="btn btn-success btn-sm updReply" value="'+data[i].replyNum+'" >수정</button>';
 							html+='<button type="button" class="btn btn-danger btn-sm delReply" value="'+data[i].replyNum+'">삭제</button> </td>';
+						} else {
+							html += '<td></td>';
 						}
 						html+='</tr>';
 						$('#rediv').html(html);
-						$('#td'+data[i].parentNum+':last').append($('#'+data[i].replyNum));
-						$('#td'+data[i].parentNum+':last').append($('#rediv tr'));
+						$('#'+data[i].parentNum).closest('tbody').append($('#rediv tr'));
 					}
 				}
 			},
@@ -220,6 +225,7 @@
 			<input id="productNum" type="hidden" value="${article.productNum }">
 			<input id="logNum" type="hidden" value="${logNum}"> <input
 				id="articleNum" type="hidden" value="${article.articleNum }" />
+			<input id="depth" type="hidden" value="">
 			<table id="reCommentTable" style="display: none">
 				<tr id="reComment" style="background-color: ">
 					<td colspan="3">

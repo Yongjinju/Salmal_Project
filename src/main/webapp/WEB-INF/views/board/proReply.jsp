@@ -40,7 +40,6 @@
 			} else {
 				if($(this).html()=='수정'){
 					$(this).html('변경');
-					//$('#'+id).find(':nth-child(2):eq(0)').html('<input size=30 type=text value="' + $('#' + id).find(':nth-child(2)').html()+ '">')
 					console.log($('#content'+id).attr('id'));
 					$('#content'+id).html('<input size=30 type=text value="' + $('#content' + id).html()+ '">')
 				} else {
@@ -63,6 +62,8 @@
 		$('#div1').on('click','.delReply',function(){ //댓글 삭제
 			var i = confirm('정말 삭제하시겠습니까?');
 			if(i){
+				$('.reComment').val("");
+				$('#reCommentTable').append($('#reComment'));
 				$.ajax({
 					url:"delReply",
 					data:{
@@ -81,8 +82,6 @@
 		$('#div1').on('click', '.reCommentAdd', function(){
 			var trId=$(this).attr('value');//부모댓글id
 			var parentDepth=$(this).attr('depth');//부모댓글깊이
-			console.log(trId);
-			console.log(parentDepth);
 			$('#depth').val(parentDepth);//hidden에 부모댓글 깊이 저장
 			$('.parentNum').val(trId);//hidden에 부모댓글id저장
 			$('.reComment').val(""); //textarea초기화
@@ -157,8 +156,6 @@
 				$('#button1').attr('disabled', false);
 				$('#button2').attr('disabled', false);
 			},
-			  
-			 
 			dataType:'json',
 			data:{
 				productNum : $('#productNum').val(),
@@ -197,25 +194,7 @@
 						}
 						html+='</tr>';
 						$('#rediv').html(html);
-						
-						if(data[i].depth==1){
-							$('#td'+data[i].parentNum+':last').append($('#'+data[i].replyNum)).append($('#rediv tr'));
-						    //$('#td'+data[i].parentNum+':last').append($('#rediv tr'));
-						} else if(data[i].depth==2){
-							var grandNum="";
-							if($('#'+data[i].parentNum).attr('depth')==2){
-								//grendNum=$('#'+$('#'+data[i].parentNum).attr('parentNum')).attr('id');
-								grandNum=$('#'+($('#'+$('#'+data[i].parentNum).attr('parentNum'))).attr('parentNum')).attr('id');
-								console.log(data[i].replyNum+':부모댓이 깊이: 2 , 조상: '+grandNum);
-								$('#td'+grandNum+':last').append($('#'+data[i].replyNum)).append($('#rediv tr'));
-							} else if ($('#'+data[i].parentNum).attr('depth')==1){
-								grandNum=$('#'+$('#'+data[i].parentNum).attr('parentNum')).attr('id');
-								console.log(data[i].replyNum+':부모댓이 깊이: 1 , 조상: '+grandNum);
-								$('#td'+grandNum+':last').append($('#'+data[i].replyNum)).append($('#rediv tr'));
-							}
-						    //$('#td'+grandNum+':last').append($('#rediv tr'));
-						}
-						//alert(">>>"+$('#rediv tr').html())
+						$('#'+data[i].parentNum).closest('tbody').append($('#rediv tr'));
 					}
 				}
 			},
@@ -235,7 +214,7 @@
 	<div class="row">
 		<div class="col-md-10">
 			<div class="form-group">
-				<input type="text" placeholder="추천 댓글 달기" id="inputProReply"
+				<input type="text" placeholder="댓글 달기" id="inputProReply"
 					class="form-control">
 			</div>
 		</div>
@@ -245,7 +224,6 @@
 			<input id="productNum" type="hidden" value="${article.productNum }">
 			<input id="logNum" type="hidden" value="${logNum}"> <input
 				id="articleNum" type="hidden" value="${article.articleNum }" />
-			<input id="parentNick" type="hidden" value=""/>
 			<input id="depth" type="hidden" value="">
 			<table id="reCommentTable" style="display: none">
 				<tr id="reComment" style="background-color: ">
