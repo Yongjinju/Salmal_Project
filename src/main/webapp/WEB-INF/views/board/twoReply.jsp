@@ -136,7 +136,7 @@
 					if(data[i].depth==0 && data[i].parentNum==0){
 						html+='<tbody id="td'+data[i].replyNum+'"><tr id="'+data[i].replyNum+'" style="border-top:1px solid; background-color: #ffffd3;">'
 						html+='<td style="width:90px;">'+(cnt+1)+'</td>';
-						html+='<td style="width:250px;word-break:break-all"><span id="content'+data[i].replyNum+'">'+data[i].replyContent+'</span></td>';
+						html+='<td style="width:600px;word-break:break-all"><span id="content'+data[i].replyNum+'">'+data[i].replyContent+'</span></td>';
 						html+='<td>'+data[i].nickname+'</td>';
 						html+='</tr>';
 						html+='<tr style="border-top:hidden; background-color: #ffffd3;">';

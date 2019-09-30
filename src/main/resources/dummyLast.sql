@@ -26,11 +26,23 @@ insert into CATEGORY(categoryNum,categoryName) values (category_seq.nextval, '�
  declare
 
   begin
-    FOR i IN 1..500 loop
+    FOR i IN 1..450 loop
         INSERT INTO ARTICLE(articleNum,memberNum,categoryNum,articleTitle,articleContent,articleHits,articleDate)
         VALUES(article_seq.nextval, 1, (SELECT ROUND(DBMS_RANDOM.VALUE(1, 10),0) FROM DUAL), CONCAT('글',article_seq.nextval), 
                CONCAT('글',article_seq.nextval),1 , '2017-01-01');
     end loop;
+    FOR i IN 1..15 loop
+        INSERT INTO ARTICLE(articleNum,memberNum,categoryNum,articleTitle,articleContent,articleHits,articleDate)
+        VALUES(article_seq.nextval, 5, (SELECT ROUND(DBMS_RANDOM.VALUE(1, 10),0) FROM DUAL), CONCAT('글',article_seq.nextval), 
+               CONCAT('글',article_seq.nextval),1 , '2017-01-01');
+    end loop;
+    FOR i IN 1..35 loop
+        INSERT INTO ARTICLE(articleNum,memberNum,categoryNum,articleTitle,articleContent,articleHits,articleDate)
+        VALUES(article_seq.nextval, 2, (SELECT ROUND(DBMS_RANDOM.VALUE(1, 10),0) FROM DUAL), CONCAT('글',article_seq.nextval), 
+               CONCAT('글',article_seq.nextval),1 , '2017-01-01');
+    end loop;
+    
+    
   end;
  /
   
@@ -133,16 +145,28 @@ values (product_seq.nextval, 512, 'Apple 2019년 맥북 프로 터치바 15 9세
 
 -- 댓글
 -- (캣타워)
-insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice) values (reply_seq.nextval, 2, 763, '귀여운데 아직 안사도 될거같아요...', to_date('2019-09-05 10:31','yyyy-mm-dd hh24:mi'), 1);
-insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice) values (reply_seq.nextval, 1, 763, '튼튼해보이네요', to_date('2019-09-05 15:42','yyyy-mm-dd hh24:mi'), 1);
-insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice) values (reply_seq.nextval, 6, 763, '청소하기 힘들거같아요', to_date('2019-09-04 02:31','yyyy-mm-dd hh24:mi'), 0);
-insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice) values (reply_seq.nextval, 3, 763, '이쁘네요', to_date('2019-09-05 18:11','yyyy-mm-dd hh24:mi'), 1);
-insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice) values (reply_seq.nextval, 4, 763, '저거 집에 있는데 고양이들이 좋아해요', to_date('2019-09-06 07:11','yyyy-mm-dd hh24:mi'), 1);
--- (브이로그)
-insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice) values (reply_seq.nextval, 2, 764, '저는 예쁜게 좋아요', to_date('2019-09-05 09:34','yyyy-mm-dd hh24:mi'), 1);
-insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice) values (reply_seq.nextval, 1, 764, '튼튼한게 최고죠', to_date('2019-09-05 12:03','yyyy-mm-dd hh24:mi'), 1);
-insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice) values (reply_seq.nextval, 3, 764, '튼튼한거 사서 오래쓰세요', to_date('2019-09-06 01:11','yyyy-mm-dd hh24:mi'), 1);
+insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 2, 763, '귀엽긴 한데 너무 이르지 않아요..?', to_date('2019-09-05 10:31','yyyy-mm-dd hh24:mi'), 1, 0, 0);
+insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 1, 763, '튼튼해보이네요', to_date('2019-09-06 05:42','yyyy-mm-dd hh24:mi'), 1, 0, 0);
+insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 6, 763, '청소하기 힘들거같아요', to_date('2019-09-06 12:31','yyyy-mm-dd hh24:mi'), 0, 0, 0);
+insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 3, 763, '이쁘네요', to_date('2019-09-05 18:11','yyyy-mm-dd hh24:mi'), 1, 0, 0);
+insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 4, 763, '저거 집에 있는데 고양이들이 좋아해요', to_date('2019-09-06 07:11','yyyy-mm-dd hh24:mi'), 1, 0, 0);
 
+insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 5, 763, '세일할때 미리 사려고 했는데ㅠㅠ', to_date('2019-09-08 10:31','yyyy-mm-dd hh24:mi'), 1, 1, 1);
+insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 2, 763, '엇 얼마나 세일해여...?', to_date('2019-09-09 10:31','yyyy-mm-dd hh24:mi'), 1, 6, 2);
+insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 5, 763, '내일까지 20퍼 세일한대요!', to_date('2019-09-09 10:32','yyyy-mm-dd hh24:mi'), 1, 7, 2);
+insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 4, 763, '지금 옥션에서 더 싸게 팔고 있네요', to_date('2019-09-09 11:02','yyyy-mm-dd hh24:mi'), 1, 8, 2);
+insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 5, 763, '약간 그럴 거 같기도 하네요ㅜㅜ', to_date('2019-09-08 11:02','yyyy-mm-dd hh24:mi'), 1, 3, 1);
+
+insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 5, 761, '안녕하세요', to_date('2019-09-08 11:02','yyyy-mm-dd hh24:mi'), 1, 0, 0);
+
+select * from reply;
+
+-- (브이로그)
+insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 2, 764, '난 이쁜게 좋아', to_date('2019-09-05 09:34','yyyy-mm-dd hh24:mi'), 1, 0, 0);
+insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 1, 764, '튼튼한게 최고죠', to_date('2019-09-05 12:03','yyyy-mm-dd hh24:mi'), 1, 0, 0);
+insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 3, 764, '튼튼한거 사서 오래쓰세요', to_date('2019-09-06 01:11','yyyy-mm-dd hh24:mi'), 1, 0, 0);
+
+insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 5, 764, '나도 그렇긴한데ㅠㅠ...', to_date('2019-09-05 11:55','yyyy-mm-dd hh24:mi'), 1, 11, 1);
 -- 추천(rating)
 -- (캣타워)
 insert into RATING(productNum,memberNum,choice) values (763, 2, 1);

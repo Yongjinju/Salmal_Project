@@ -62,6 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		                                                        where articlenum = a.articlenum ) productcnt
 		from article a , member m 
 		where a.membernum = m.membernum and nickname=#{nickname}
+		order by articlenum desc
 	</select>
 	
 	<!-- 내가 댓글을 등록한 게시물 조회 -->
@@ -75,7 +76,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where r.membernum =#{membernum}
 		      and r.membernum = m.membernum
 		      and p.productnum= r.productnum
-		      and a.articlenum = p.articlenum                                                    
+		      and a.articlenum = p.articlenum
+		order by articlenum desc                                       
 	</select>
 
 
