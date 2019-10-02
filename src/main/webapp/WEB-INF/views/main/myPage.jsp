@@ -210,7 +210,7 @@
                                         </button>
                                     </div>
 						            <div class="modal-body">
-                                        작성한 게시물이 모두 삭제되며, 탈퇴처리된 회원은 어떠한 일이 있어도 복구할 수 없습니다. <br>탈퇴하시겠습니까?
+                                        작성한 게시물이 모두 삭제되며, 탈퇴 처리된 회원은 복구할 수 없습니다. <br>탈퇴하시겠습니까?
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-danger" id="withdraw" onclick="location.href='/Salmal/withdraw?email=${member.email}'">

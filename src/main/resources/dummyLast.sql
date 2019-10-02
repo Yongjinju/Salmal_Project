@@ -157,8 +157,7 @@ insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, p
 insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 4, 763, '지금 옥션에서 더 싸게 팔고 있네요', to_date('2019-09-09 11:02','yyyy-mm-dd hh24:mi'), 1, 8, 2);
 insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 5, 763, '약간 그럴 거 같기도 하네요ㅜㅜ', to_date('2019-09-08 11:02','yyyy-mm-dd hh24:mi'), 1, 3, 1);
 
-insert into REPLY(replyNum,memberNum,productNum,replyContent,replyDate,choice, parentNum, depth) values (reply_seq.nextval, 5, 761, '안녕하세요', to_date('2019-09-08 11:02','yyyy-mm-dd hh24:mi'), 1, 0, 0);
-
+delete from reply
 select * from reply;
 
 -- (브이로그)

@@ -92,7 +92,9 @@ function selectChoice(){
 							if(data=="success"){
 								alert("추천 완료");
 								replyList();
+								reCommentList();
 								replyList2();
+								reCommentList2();
 							}else{
 								alert("이미 선택하셨습니다.");
 							}
@@ -119,7 +121,9 @@ function selectChoice(){
 							if(data=="success"){
 								alert("비추천 완료");
 								replyList();
+								reCommentList();
 								replyList2();
+								reCommentList2();
 							}else{
 								alert("이미 선택하셨습니다.");
 							}

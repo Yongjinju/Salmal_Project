@@ -213,13 +213,8 @@ public class MainController {
 	@PostMapping("/update")
 	public String update(HttpSession session, MemberVO vo) {
 		System.out.println("MemberVO : "+ vo);
-		if(mdao.update(vo) == 1) {
-			session.invalidate();
-			return "redirect:/Salmal/main";
-		} else {
-			return "/mypage";
-		}
-		
+		mdao.update(vo);
+		return "redirect:myPage";
 	}
 
 	// 로그아웃

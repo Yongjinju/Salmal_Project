@@ -102,6 +102,7 @@ $(function() {
 						if(data=="success"){
 							alert("추천 완료");
 							replyList();
+							reCommentList();
 						}else{
 							alert("이미 선택하셨습니다.");
 						}
