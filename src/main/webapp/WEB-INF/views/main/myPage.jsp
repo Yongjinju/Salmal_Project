@@ -122,8 +122,8 @@
                                             <tr>
                                                 <th>글번호</th>
                                                 <th>말머리</th>
-                                                <th>닉네임</th>
                                                 <th>글제목</th>
+                                                <th>닉네임</th>
                                                 <th>작성시간</th>
                                             </tr>
                                         </thead>

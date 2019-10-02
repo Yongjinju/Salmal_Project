@@ -61,7 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		                                                        from product
 		                                                        where articlenum = a.articlenum ) productcnt
 		from article a , member m 
-		where a.membernum = m.membernum and nickname=#{nickname}
+		where a.membernum = m.membernum and m.membernum=#{membernum}
 		order by articlenum desc
 	</select>
 	
