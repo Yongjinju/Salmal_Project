@@ -159,7 +159,7 @@ public class MainController {
 		System.out.println("nickname = "+nickname);
 		
 		
-		List<Map<String, Object>> myArticleList =  mdao.selectMyArticlelist(nickname); 
+		List<Map<String, Object>> myArticleList =  mdao.selectMyArticlelist(logNum); 
 		System.out.println("마이페이지 article리스트>>"+ myArticleList);
 		
 		for (Map<String, Object> map : myArticleList) { 
